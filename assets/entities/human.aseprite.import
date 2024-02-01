@@ -1,0 +1,14 @@
+[remap]
+
+importer="aseprite_wizard.plugin.noop"
+type="PackedDataContainer"
+uid="uid://kg3clyhoudtp"
+path="res://.godot/imported/human.aseprite-8dce72f62ccba0831a83698fd027f65a.res"
+
+[deps]
+
+source_file="res://assets/entities/human.aseprite"
+dest_files=["res://.godot/imported/human.aseprite-8dce72f62ccba0831a83698fd027f65a.res"]
+
+[params]
+

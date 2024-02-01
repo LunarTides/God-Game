@@ -1,0 +1,93 @@
+[gd_scene load_steps=4 format=3 uid="uid://ctb6jd8v40e14"]
+
+[ext_resource type="Script" path="res://scripts/entity_panel.gd" id="1_twptf"]
+[ext_resource type="Texture2D" uid="uid://ctf22bbpwivv1" path="res://assets/ui/control.png" id="2_ng1mr"]
+[ext_resource type="Texture2D" uid="uid://c0ta5lfrvun01" path="res://assets/ui/damageLayer 1.png" id="3_6bgfu"]
+
+[node name="EntityPanel" type="Panel"]
+process_mode = 3
+top_level = true
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 400.0
+offset_top = 40.0
+offset_right = -400.0
+offset_bottom = -40.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_twptf")
+
+[node name="Name" type="Label" parent="."]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 96.0
+offset_bottom = 96.0
+text = "Name"
+
+[node name="Health" type="Label" parent="."]
+offset_left = 4.0
+offset_top = 56.0
+offset_right = 96.0
+offset_bottom = 148.0
+text = "Health: 0"
+
+[node name="Control" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -31.0
+offset_top = -31.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Sprite2D" type="Sprite2D" parent="Control"]
+texture_filter = 1
+position = Vector2(15, 15)
+texture = ExtResource("2_ng1mr")
+metadata/_aseprite_wizard_config_ = {
+"i_mode": 1,
+"keep_anim_length": false,
+"layer": "",
+"o_ex_p": "",
+"o_folder": "res://assets/ui",
+"o_name": "",
+"only_visible": false,
+"op_exp": true,
+"player": "",
+"source": "res://assets/ui/control.aseprite"
+}
+
+[node name="Damage" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+offset_right = 31.0
+grow_vertical = 0
+metadata/_edit_group_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Damage"]
+texture_filter = 1
+position = Vector2(15, 15)
+texture = ExtResource("3_6bgfu")
+metadata/_aseprite_wizard_config_ = {
+"i_mode": 1,
+"keep_anim_length": false,
+"layer": "Layer 1",
+"o_ex_p": "",
+"o_folder": "res://assets/ui",
+"o_name": "damage",
+"only_visible": false,
+"op_exp": true,
+"player": "",
+"source": "res://assets/ui/damage.aseprite"
+}
+
+[connection signal="pressed" from="Control" to="." method="_on_control_pressed"]
+[connection signal="pressed" from="Damage" to="." method="_on_damage_pressed"]

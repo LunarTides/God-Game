@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://dgojrxaey8v1m"]
+
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_74ilg"]
+[ext_resource type="PackedScene" uid="uid://ctb6jd8v40e14" path="res://scenes/entity_panel.tscn" id="1_xf4ig"]
+[ext_resource type="PackedScene" uid="uid://cexc6ca643j5m" path="res://scenes/entities/human.tscn" id="1_yv24n"]
+
+[node name="Main" type="Node2D" node_paths=PackedStringArray("entity_panel")]
+script = ExtResource("1_74ilg")
+entity_panel = NodePath("EntityPanel")
+
+[node name="EntityPanel" parent="." instance=ExtResource("1_xf4ig")]
+anchors_preset = 15
+
+[node name="Human" parent="." instance=ExtResource("1_yv24n")]
+position = Vector2(316, 130)
+
+[node name="Human2" parent="." instance=ExtResource("1_yv24n")]
+position = Vector2(1099, 74)

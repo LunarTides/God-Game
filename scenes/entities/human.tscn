@@ -1,0 +1,72 @@
+[gd_scene load_steps=9 format=3 uid="uid://cexc6ca643j5m"]
+
+[ext_resource type="Script" path="res://resources/entity.gd" id="1_qtm0m"]
+[ext_resource type="Texture2D" uid="uid://n6ijoouq0gwe" path="res://assets/entities/human.png" id="2_8p5n2"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="3_5f4ql"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/decorators/inverter.gd" id="4_37gce"]
+[ext_resource type="Script" path="res://ai/entities/is_in_center_of_screen.gd" id="4_5335m"]
+[ext_resource type="Script" path="res://ai/entities/walk_to_center_of_screen.gd" id="4_i7g7e"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/sequence.gd" id="4_rimab"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2t556"]
+size = Vector2(32, 32)
+
+[node name="Human" type="CharacterBody2D"]
+
+[node name="Entity" type="Node" parent="." node_paths=PackedStringArray("character", "sprite", "ai", "area")]
+script = ExtResource("1_qtm0m")
+character = NodePath("..")
+sprite = NodePath("../Sprite")
+ai = NodePath("../AI")
+area = NodePath("../Area2D")
+health = 100
+speed = 200
+possible_first_names = {
+"Female": ["Mary", "Patricia", "Jennifer", "Linda", "Elizabeth", "Barbara", "Susan", "Jessica", "Sarah", "Karen"],
+"Male": ["James", "Robert", "John", "Michael", "David", "William", "Richard", "Joseph", "Thomas", "Christopher"],
+"Non-binary": ["Parker", "River", "Rowan", "Riley", "Avery", "Logan", "Quinn", "Jordan", "Cameron", "Angel"]
+}
+possible_last_names = Array[String](["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez"])
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_8p5n2")
+metadata/_aseprite_wizard_config_ = {
+"i_mode": 1,
+"keep_anim_length": false,
+"layer": "",
+"o_ex_p": "",
+"o_folder": "res://assets/entities",
+"o_name": "",
+"only_visible": false,
+"op_exp": true,
+"player": "",
+"source": "res://assets/entities/human.aseprite"
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_2t556")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_2t556")
+
+[node name="AI" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
+script = ExtResource("3_5f4ql")
+enabled = false
+blackboard = NodePath("@Node@17459")
+actor = NodePath("..")
+
+[node name="SequenceComposite" type="Node" parent="AI"]
+script = ExtResource("4_rimab")
+
+[node name="IsNotInCenterOfScreen" type="Node" parent="AI/SequenceComposite"]
+script = ExtResource("4_37gce")
+
+[node name="IsInCenterOfScreen" type="Node" parent="AI/SequenceComposite/IsNotInCenterOfScreen"]
+script = ExtResource("4_5335m")
+
+[node name="WalkToCenterOfScreen" type="Node" parent="AI/SequenceComposite" node_paths=PackedStringArray("entity")]
+script = ExtResource("4_i7g7e")
+entity = NodePath("../../../Entity")

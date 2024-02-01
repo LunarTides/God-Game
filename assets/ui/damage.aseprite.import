@@ -1,0 +1,14 @@
+[remap]
+
+importer="aseprite_wizard.plugin.noop"
+type="PackedDataContainer"
+uid="uid://6wrgfnae1mp6"
+path="res://.godot/imported/damage.aseprite-a02074bb5b3c3c0bd4c3cdc4db4ec3db.res"
+
+[deps]
+
+source_file="res://assets/ui/damage.aseprite"
+dest_files=["res://.godot/imported/damage.aseprite-a02074bb5b3c3c0bd4c3cdc4db4ec3db.res"]
+
+[params]
+
