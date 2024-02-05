@@ -6,7 +6,7 @@ class_name WalkToCenterOfScreen
 
 func tick(actor: Node, blackboard: Blackboard):
 	# Move towards the center of the screen
-	if actor.position.distance_to(walk_to_position.position) <= entity.target_treshold:
+	if actor.position.distance_to(walk_to_position.position) <= entity.target_threshold:
 		return FAILURE
 	
 	walk_to_position.position = get_viewport().size / 2

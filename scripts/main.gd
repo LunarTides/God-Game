@@ -23,4 +23,3 @@ func _unhandled_input(event):
 			entity.set_target($Node2D)
 		
 		moving = not moving
-		entity.generate_name()

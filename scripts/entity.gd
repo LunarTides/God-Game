@@ -76,7 +76,7 @@ var entity_name := "Placeholder"
 
 ## How close the entity has to get to its target position before reaching it.
 ## This is to prevent jittering once it reaches its target.
-@export var target_treshold: float = 5
+@export var target_threshold: float = 5
 
 func _ready():
 	generate_gender()
@@ -99,7 +99,7 @@ func _physics_process(delta):
 	body.velocity = body.velocity.normalized() * 16 * speed * delta
 	
 	if walk_to_position.position and not is_controlling:
-		if body.position.distance_to(walk_to_position.position) > target_treshold:
+		if body.position.distance_to(walk_to_position.position) > target_threshold:
 			body.move_and_slide()
 	else:
 		body.move_and_slide()

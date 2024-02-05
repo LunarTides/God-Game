@@ -9,7 +9,7 @@ func tick(actor: Node, blackboard: Blackboard):
 	if not position:
 		return FAILURE
 	
-	if actor.position.distance_to(position) <= entity.target_treshold:
+	if actor.position.distance_to(position) <= entity.target_threshold:
 		return SUCCESS
 	
 	actor.velocity = actor.position.direction_to(position)
