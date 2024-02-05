@@ -1,7 +1,8 @@
-extends Node
 class_name Entity
+extends Node
 ## A base entity class which defines methods / members that applies to every living entity.
 ## @experimental
+
 
 ## Emitted when the entity is damaged.
 signal damaged(amount: int)
@@ -33,10 +34,10 @@ signal killed
 @export var speed: int = 200
 
 ## Whether or not the player is controlling this entity. If so, it disables the AI.
-@export var is_controlling: bool = false
+@export var is_controlling := false
 
 ## The possible first names for each gender.
-@export var possible_first_names: Dictionary = {
+@export var possible_first_names := {
 	"Male": [],
 	"Female": [],
 	"Non-binary": []
@@ -47,7 +48,7 @@ signal killed
 
 # CAUTION: Be careful of cancelations on xitter
 ## The possible genders for the entity.
-@export var possible_genders: Array[String] = ["Male", "Female", "Non-binary"]
+@export var possible_genders := ["Male", "Female", "Non-binary"]
 
 ## The color of the sprite's modulate if the AI is controlling it.
 @export var ai_color := Color.WHITE
@@ -58,8 +59,12 @@ signal killed
 ## The color of the sprite's modulate if the Player is hovering their mouse over it.
 @export var hover_color := Color.YELLOW
 
+## How close the entity has to get to its target position before reaching it.
+## This is to prevent jittering once it reaches its target.
+@export var target_threshold := 5.0
+
 ## The entity's gender.
-var gender = "None"
+var gender := "None"
 
 ## The abbreviated version of the entity's gender.
 var abv_gender: String:
@@ -74,9 +79,6 @@ var abv_gender: String:
 ## The entity's name.
 var entity_name := "Placeholder"
 
-## How close the entity has to get to its target position before reaching it.
-## This is to prevent jittering once it reaches its target.
-@export var target_threshold: float = 5
 
 func _ready():
 	generate_gender()
@@ -86,6 +88,7 @@ func _ready():
 	area.mouse_exited.connect(_stop_hover)
 	
 	area.input_event.connect(_on_area_input_event)
+
 
 func _physics_process(delta):
 	if Input.is_action_just_pressed("release_control"):
@@ -104,21 +107,6 @@ func _physics_process(delta):
 	else:
 		body.move_and_slide()
 
-func _on_area_input_event(viewport: Node, event: InputEvent, shape_idx: int):
-	if event.is_action_pressed("left_click"):
-		_click()
-
-func _hover():
-	sprite.modulate = hover_color
-
-func _stop_hover():
-	_reset_modulate()
-
-func _reset_modulate():
-	sprite.modulate = ai_color if not is_controlling else player_color
-
-func _click():
-	Game.open_entity_panel(self)
 
 ## Deal damage to the entity
 func damage(amount: int):
@@ -130,33 +118,61 @@ func damage(amount: int):
 		killed.emit()
 		body.queue_free()
 
+
 ## Toggle control over the entity.
 func toggle_control():
 	is_controlling = not is_controlling
 	_reset_modulate()
 
+
 ## Begins moving the entity towards the target node.
 func set_target(target: Node2D):
 	walk_to_position.position = target.global_position
+
 
 ## Begins moving the entity towards the target position.
 func set_target_position(position: Vector2):
 	walk_to_position.position = position
 
+
 ## Unsets the target. The AI will resume its normal operations.
 func unset_target():
 	walk_to_position.position = Vector2.ZERO
+
 
 ## Returns if the entity has a target.
 ## As long as an AI is controlling the entity, this will almost always return true.
 func has_target():
 	return walk_to_position.position != null
 
+
 ## Randomize and set the entity's gender.
 func generate_gender():
 	gender = possible_genders.pick_random()
+
 
 ## Generates a random first name, and last name and gives them to the entity.
 ## The first name depends on the gender, and the pool is [member possible_first_names] and [member possible_last_names].
 func generate_name():
 	entity_name = "%s %s" % [possible_first_names[gender].pick_random(), possible_last_names.pick_random()]
+
+
+func _hover():
+	sprite.modulate = hover_color
+
+
+func _stop_hover():
+	_reset_modulate()
+
+
+func _reset_modulate():
+	sprite.modulate = ai_color if not is_controlling else player_color
+
+
+func _click():
+	Game.open_entity_panel(self)
+
+
+func _on_area_input_event(viewport: Node, event: InputEvent, shape_idx: int):
+	if event.is_action_pressed("left_click"):
+		_click()

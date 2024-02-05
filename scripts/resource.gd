@@ -3,6 +3,7 @@ class_name WorldResource
 ## A base resource class which defines methods / members that applies to every inanimate resource.
 ## @experimental
 
+
 ## The StaticBody of the resource.
 ## The body should probably be the root of the resource.
 @export var body: StaticBody2D
@@ -15,6 +16,7 @@ class_name WorldResource
 
 ## The resource's name.
 @export var resource_name: StringName
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

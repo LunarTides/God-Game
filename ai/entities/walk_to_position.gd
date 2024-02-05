@@ -1,8 +1,10 @@
 extends ActionLeaf
 class_name WalkToPosition
 
+
 @export var entity: Entity
 @export var position: Vector2
+
 
 func tick(actor: Node, blackboard: Blackboard):
 	# Move towards the position

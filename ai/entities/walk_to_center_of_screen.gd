@@ -1,8 +1,10 @@
 extends ActionLeaf
 class_name WalkToCenterOfScreen
 
+
 @export var entity: Entity
 @export var walk_to_position: WalkToPosition
+
 
 func tick(actor: Node, blackboard: Blackboard):
 	# Move towards the center of the screen

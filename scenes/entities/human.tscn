@@ -44,16 +44,18 @@ metadata/_aseprite_wizard_config_ = {
 }
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
 shape = SubResource("RectangleShape2D_2t556")
 
 [node name="Area2D" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+visible = false
 shape = SubResource("RectangleShape2D_2t556")
 
 [node name="AI" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("3_5f4ql")
-blackboard = NodePath("@Node@70184")
+blackboard = NodePath("@Node@17463")
 actor = NodePath("..")
 
 [node name="Walk" type="Node" parent="AI"]
