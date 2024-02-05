@@ -21,6 +21,10 @@ BeehaveGlobalMetrics="*res://addons/beehave/metrics/beehave_global_metrics.gd"
 BeehaveGlobalDebugger="*res://addons/beehave/debug/global_debugger.gd"
 Game="*res://scripts/game.gd"
 
+[debug]
+
+gdscript/warnings/unused_parameter=0
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addons/beehave/plugin.cfg")

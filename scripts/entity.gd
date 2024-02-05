@@ -3,23 +3,23 @@ class_name Entity
 ## A base entity class which defines methods / members that applies to every living entity.
 ## @experimental
 
-## Emitted when the entity is damaged
+## Emitted when the entity is damaged.
 signal damaged(amount: int)
 
-## Emitted when the entity dies
+## Emitted when the entity dies.
 signal killed
 
 ## The CharacterBody of the entity. This will be the thing that moves.
-## The CharacterBody should probably be the root of the entity
-@export var character: CharacterBody2D
+## The CharacterBody should probably be the root of the entity.
+@export var body: CharacterBody2D
 
-## The entity's sprite. This should probably be a sibling to the Entity node
+## The entity's sprite. This should probably be a sibling to the [Entity] node.
 @export var sprite: Sprite2D
 
-## The entity's AI tree node. This will define the AI's behaviour
+## The entity's AI tree node. This will define the AI's behaviour.
 @export var ai: BeehaveTree
 
-## The entity's Area node. This is currently only used for hover detection, so define the collision shape correctly
+## The entity's Area node. This is currently only used for hover detection, so define the collision shape correctly.
 @export var area: Area2D
 
 ## The WalkToPosition AI node. Every entity should have this node in the AI tree,
@@ -32,33 +32,33 @@ signal killed
 ## How fast the entity moves. The formula is: [code]velocity = normalized_vector * 16 * speed * delta[/code]
 @export var speed: int = 200
 
-## Whether or not the player is controlling this entity. If so, it disables the AI
+## Whether or not the player is controlling this entity. If so, it disables the AI.
 @export var is_controlling: bool = false
 
-## The possible first names for each gender
+## The possible first names for each gender.
 @export var possible_first_names: Dictionary = {
 	"Male": [],
 	"Female": [],
 	"Non-binary": []
 }
 
-## The possible last names for the entity
+## The possible last names for the entity.
 @export var possible_last_names: Array[String]
 
 # CAUTION: Be careful of cancelations on xitter
-## The possible genders for the entity
+## The possible genders for the entity.
 @export var possible_genders: Array[String] = ["Male", "Female", "Non-binary"]
 
-## The color of the sprite's modulate if the AI is controlling it
+## The color of the sprite's modulate if the AI is controlling it.
 @export var ai_color := Color.WHITE
 
-## The color of the sprite's modulate if the Player is controlling it
+## The color of the sprite's modulate if the Player is controlling it.
 @export var player_color := Color.CRIMSON
 
-## The color of the sprite's modulate if the Player is hovering their mouse over it
+## The color of the sprite's modulate if the Player is hovering their mouse over it.
 @export var hover_color := Color.YELLOW
 
-## The entity's gender
+## The entity's gender.
 var gender = "None"
 
 ## The abbreviated version of the entity's gender.
@@ -71,11 +71,11 @@ var abv_gender: String:
 	set(_value):
 		return
 
-## The entity's name
+## The entity's name.
 var entity_name := "Placeholder"
 
 ## How close the entity has to get to its target position before reaching it.
-## This is to prevent jittering once it reaches its target
+## This is to prevent jittering once it reaches its target.
 @export var target_treshold: float = 5
 
 func _ready():
@@ -94,15 +94,15 @@ func _physics_process(delta):
 	
 	if is_controlling:
 		# Control the entity
-		character.velocity = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+		body.velocity = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	
-	character.velocity = character.velocity.normalized() * 16 * speed * delta
+	body.velocity = body.velocity.normalized() * 16 * speed * delta
 	
 	if walk_to_position.position and not is_controlling:
-		if character.position.distance_to(walk_to_position.position) > target_treshold:
-			character.move_and_slide()
+		if body.position.distance_to(walk_to_position.position) > target_treshold:
+			body.move_and_slide()
 	else:
-		character.move_and_slide()
+		body.move_and_slide()
 
 func _on_area_input_event(viewport: Node, event: InputEvent, shape_idx: int):
 	if event.is_action_pressed("left_click"):
@@ -128,34 +128,35 @@ func damage(amount: int):
 	
 	if health <= 0:
 		killed.emit()
-		character.queue_free()
+		body.queue_free()
 
-## Toggle control over the entity
+## Toggle control over the entity.
 func toggle_control():
 	is_controlling = not is_controlling
 	_reset_modulate()
 
-## Begins moving the entity towards the target node
+## Begins moving the entity towards the target node.
 func set_target(target: Node2D):
 	walk_to_position.position = target.global_position
 
-## Begins moving the entity towards the target position
+## Begins moving the entity towards the target position.
 func set_target_position(position: Vector2):
 	walk_to_position.position = position
 
-## Unsets the target. The AI will resume its normal operations
+## Unsets the target. The AI will resume its normal operations.
 func unset_target():
 	walk_to_position.position = Vector2.ZERO
 
-## Returns if the entity has a target. As long as an AI is controlling the entity, this will almost always return true
+## Returns if the entity has a target.
+## As long as an AI is controlling the entity, this will almost always return true.
 func has_target():
 	return walk_to_position.position != null
 
-## Randomize and set the entity's gender
+## Randomize and set the entity's gender.
 func generate_gender():
 	gender = possible_genders.pick_random()
 
 ## Generates a random first name, and last name and gives them to the entity.
-## The first name depends on the gender, and the pool is [member possible_first_names] and [member possible_last_names]
+## The first name depends on the gender, and the pool is [member possible_first_names] and [member possible_last_names].
 func generate_name():
 	entity_name = "%s %s" % [possible_first_names[gender].pick_random(), possible_last_names.pick_random()]

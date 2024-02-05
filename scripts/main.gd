@@ -2,6 +2,7 @@ extends Node2D
 
 @export var entity_panel: Panel
 
+# TODO: Remove at some point
 @onready var entity: Entity = $Human/Entity
 var moving := false
 
@@ -13,6 +14,7 @@ func _ready():
 func _process(delta):
 	pass
 
+# TODO: Remove at some point
 func _unhandled_input(event):
 	if event.as_text() == "0" and event.is_released():
 		if moving:
