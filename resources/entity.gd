@@ -9,6 +9,8 @@ signal killed
 @export var ai: BeehaveTree
 @export var area: Area2D
 
+@export var walk_to_node: WalkToNode
+
 @export var health: int
 @export var speed: int = 1
 @export var is_controlling: bool = false
@@ -38,6 +40,8 @@ var abv_gender: String:
 		return
 
 var entity_name := "Placeholder"
+var target_position: Vector2
+@export var target_treshold: float = 5
 
 func _ready():
 	generate_gender()
@@ -58,13 +62,19 @@ func _physics_process(delta):
 		ai.disable()
 		ai.interrupt()
 		
-		character.velocity = Input.get_vector("move_left", "move_right", "move_up", "move_down").normalized()
+		character.velocity = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	else:
 		# Make the ai control the entity
 		ai.enable()
 	
 	character.velocity = character.velocity.normalized() * 16 * speed * delta
-	character.move_and_slide()
+	
+	if target_position:
+		if character.position.distance_to(target_position) > target_treshold:
+			character.move_and_slide()
+	else:
+		character.move_and_slide()
+	
 	character.velocity = Vector2.ZERO
 
 func _on_area_input_event(viewport: Node, event: InputEvent, shape_idx: int):
@@ -92,6 +102,17 @@ func damage(amount: int):
 func toggle_control():
 	is_controlling = not is_controlling
 	reset_modulate()
+
+func set_target(_target: Node2D):
+	walk_to_node.node = _target
+	target_position = _target.global_position
+
+func unset_target():
+	walk_to_node.node = null
+	target_position = Vector2.ZERO
+
+func has_target():
+	return walk_to_node.node != null
 
 func generate_gender():
 	gender = possible_genders.pick_random()
