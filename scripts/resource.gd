@@ -14,7 +14,7 @@ class_name WorldResource
 ## The resource's Area node.
 @export var area: Area2D
 
-## The resource's name.
+## The resource's name. THIS MUST EQUAL TO THE SCENE FILENAME, IN UPPERCASE, WITH ALL UNDERSCORES REPLACED WITH SPACES.
 @export var resource_name: StringName
 
 

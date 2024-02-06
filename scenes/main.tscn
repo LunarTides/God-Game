@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=3 uid="uid://dgojrxaey8v1m"]
+[gd_scene load_steps=6 format=3 uid="uid://dgojrxaey8v1m"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_74ilg"]
 [ext_resource type="PackedScene" uid="uid://ctb6jd8v40e14" path="res://scenes/entity_panel.tscn" id="1_xf4ig"]
 [ext_resource type="PackedScene" uid="uid://cexc6ca643j5m" path="res://scenes/entities/human.tscn" id="1_yv24n"]
+[ext_resource type="PackedScene" uid="uid://itqtpewa242g" path="res://scenes/resource_nodes/tree.tscn" id="5_8wkfr"]
 [ext_resource type="PackedScene" uid="uid://cgsbhlhbiw7xh" path="res://scenes/resources/wood.tscn" id="5_kfle5"]
 
 [node name="Main" type="Node2D" node_paths=PackedStringArray("entity_panel")]
@@ -19,3 +20,6 @@ position = Vector2(1099, 74)
 
 [node name="Wood" parent="." instance=ExtResource("5_kfle5")]
 position = Vector2(122, 404)
+
+[node name="Tree" parent="." instance=ExtResource("5_8wkfr")]
+position = Vector2(172, 481)

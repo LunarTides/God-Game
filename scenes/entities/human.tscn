@@ -55,7 +55,7 @@ shape = SubResource("RectangleShape2D_2t556")
 
 [node name="AI" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("3_5f4ql")
-blackboard = NodePath("@Node@17463")
+blackboard = NodePath("@Node@23868")
 actor = NodePath("..")
 
 [node name="Walk" type="Node" parent="AI"]

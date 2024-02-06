@@ -5,7 +5,7 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ro8ng"]
 
-[node name="Wood" type="StaticBody2D"]
+[node name="Wood" type="StaticBody2D" groups=["Resources"]]
 collision_layer = 0
 collision_mask = 0
 

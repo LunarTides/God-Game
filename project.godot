@@ -29,6 +29,19 @@ gdscript/warnings/unused_parameter=0
 
 enabled=PackedStringArray("res://addons/AsepriteWizard/plugin.cfg", "res://addons/beehave/plugin.cfg")
 
+[file_customization]
+
+folder_colors={
+"res://addons/": "gray",
+"res://ai/": "orange",
+"res://assets/": "yellow",
+"res://scenes/": "blue",
+"res://scenes/entities/": "green",
+"res://scenes/resource_nodes/": "yellow",
+"res://scenes/resources/": "teal",
+"res://scripts/": "purple"
+}
+
 [input]
 
 move_up={

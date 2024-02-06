@@ -170,6 +170,7 @@ func emit_target_reached(position: Vector2):
 ## Returns if the pickup was successful.
 func pickup_resource(resource: WorldResource) -> bool:
 	# Check if the resource is in a certain radius around the entity
+	# TODO: Don't hardcode the distance value
 	if body.position.distance_to(resource.body.global_position) > 5:
 		return false
 	
@@ -184,12 +185,59 @@ func pickup_resource(resource: WorldResource) -> bool:
 	return true
 
 
+## Picks up a random resource from around the entity. The resource needs to be right next to the entity for this to work.
+## Returns if the pickup was successful.
+# TODO: Make this return bool
+func pickup_random_resource(resource: WorldResource):
+	pass
+
+
 ## Walks to the specified resource, then picks it up.
 ## Returns if the pickup was successful
 func walk_to_and_pickup_resource(resource: WorldResource) -> bool:
 	set_target(resource.body)
 	await target_reached
 	return pickup_resource(resource)
+
+
+## Walks to and picks up a random resource.
+## Returns if the pickup was successful.
+# TODO: Make this return bool
+func walk_to_and_pickup_random_resource():
+	pass
+
+
+## Uses the specified resource node. The resource node needs to be right next to the entity for this to work.
+## Returns if the usage was successful.
+func use_resource_node(resource_node: ResourceNode) -> bool:
+	# Check if the resource node is in a certain radius around the entity
+	if body.position.distance_to(resource_node.body.global_position) > 5:
+		return false
+	
+	resource_node.use()
+	return true
+
+
+## Walks to the specified resource node, then uses it up.
+## Returns if the usage was successful
+func walk_to_and_use_resource_node(resource_node: ResourceNode) -> bool:
+	set_target(resource_node.body)
+	await target_reached
+	
+	# Use up the resource node
+	var result = true
+	
+	var i = 0
+	
+	# Use `i` as a backup incase something goes wrong
+	# TODO: Don't use _used_times here
+	while resource_node._used_times < resource_node.use_times and i < resource_node.use_times:
+		await get_tree().create_timer(1, false).timeout
+		
+		result = result and use_resource_node(resource_node)
+		i += 1
+	
+	return result
 
 
 ## Randomize and set the entity's gender.
