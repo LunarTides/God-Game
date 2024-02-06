@@ -21,9 +21,18 @@ func _process(delta):
 # TODO: Remove at some point
 func _unhandled_input(event):
 	if event.as_text() == "0" and event.is_released():
+		if not is_instance_valid(entity):
+			print_debug("The entity is not valid")
+			return
+		
+		if not is_instance_valid($Wood):
+			print_debug("The wood body is not valid")
+			entity.unset_target()
+			return
+		
 		if moving:
 			entity.unset_target()
 		else:
-			entity.set_target($Node2D)
+			entity.walk_to_and_pickup_resource($Wood/WorldResource)
 		
 		moving = not moving

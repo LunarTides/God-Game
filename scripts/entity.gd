@@ -10,6 +10,9 @@ signal damaged(amount: int)
 ## Emitted when the entity dies.
 signal killed
 
+## Emitted when the entity reaches its target.
+signal target_reached(position: Vector2)
+
 ## The CharacterBody of the entity. This will be the thing that moves.
 ## The CharacterBody should probably be the root of the entity.
 @export var body: CharacterBody2D
@@ -79,6 +82,13 @@ var abv_gender: String:
 ## The entity's name.
 var entity_name := "Placeholder"
 
+## The entity's inventory.
+## This looks something like this: [code]{"Resource Name": [WorldResource:<Node#30232544541>, WorldResource:<Node#59275306838>][/code]
+var inventory: Dictionary
+
+
+var _has_reached_target = false
+
 
 func _ready():
 	generate_gender()
@@ -128,22 +138,58 @@ func toggle_control():
 ## Begins moving the entity towards the target node.
 func set_target(target: Node2D):
 	walk_to_position.position = target.global_position
+	_has_reached_target = false
 
 
 ## Begins moving the entity towards the target position.
 func set_target_position(position: Vector2):
 	walk_to_position.position = position
+	_has_reached_target = false
 
 
 ## Unsets the target. The AI will resume its normal operations.
 func unset_target():
 	walk_to_position.position = Vector2.ZERO
+	_has_reached_target = false
 
 
 ## Returns if the entity has a target.
 ## As long as an AI is controlling the entity, this will almost always return true.
 func has_target():
 	return walk_to_position.position != null
+
+
+## This will emit the target_reached signal if it hasn't been emitted for that target before.
+func emit_target_reached(position: Vector2):
+	if not _has_reached_target:
+		_has_reached_target = true
+		target_reached.emit(position)
+
+
+## Picks up the specified resource. The resource needs to be right next to the entity for this to work.
+## Returns if the pickup was successful.
+func pickup_resource(resource: WorldResource) -> bool:
+	# Check if the resource is in a certain radius around the entity
+	if body.position.distance_to(resource.body.global_position) > 5:
+		return false
+	
+	if not inventory.has(resource.resource_name):
+		inventory[resource.resource_name] = []
+	
+	inventory[resource.resource_name].append(resource)
+	
+	resource.body.queue_free()
+	
+	print_debug(inventory)
+	return true
+
+
+## Walks to the specified resource, then picks it up.
+## Returns if the pickup was successful
+func walk_to_and_pickup_resource(resource: WorldResource) -> bool:
+	set_target(resource.body)
+	await target_reached
+	return pickup_resource(resource)
 
 
 ## Randomize and set the entity's gender.

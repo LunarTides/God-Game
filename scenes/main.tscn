@@ -1,20 +1,13 @@
-[gd_scene load_steps=6 format=3 uid="uid://dgojrxaey8v1m"]
+[gd_scene load_steps=5 format=3 uid="uid://dgojrxaey8v1m"]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_74ilg"]
 [ext_resource type="PackedScene" uid="uid://ctb6jd8v40e14" path="res://scenes/entity_panel.tscn" id="1_xf4ig"]
 [ext_resource type="PackedScene" uid="uid://cexc6ca643j5m" path="res://scenes/entities/human.tscn" id="1_yv24n"]
-[ext_resource type="Texture2D" uid="uid://bkfgd6j6g7rsd" path="res://icon.svg" id="4_qvki0"]
 [ext_resource type="PackedScene" uid="uid://cgsbhlhbiw7xh" path="res://scenes/resources/wood.tscn" id="5_kfle5"]
 
 [node name="Main" type="Node2D" node_paths=PackedStringArray("entity_panel")]
 script = ExtResource("1_74ilg")
 entity_panel = NodePath("EntityPanel")
-
-[node name="Node2D" type="Node2D" parent="."]
-position = Vector2(31.06, 100)
-
-[node name="Sprite2D" type="Sprite2D" parent="Node2D"]
-texture = ExtResource("4_qvki0")
 
 [node name="EntityPanel" parent="." instance=ExtResource("1_xf4ig")]
 

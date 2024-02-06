@@ -6,6 +6,8 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ro8ng"]
 
 [node name="Wood" type="StaticBody2D"]
+collision_layer = 0
+collision_mask = 0
 
 [node name="WorldResource" type="Node" parent="." node_paths=PackedStringArray("body", "sprite", "area")]
 script = ExtResource("1_sl34n")
