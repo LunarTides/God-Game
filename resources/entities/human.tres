@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="WorldEntity" load_steps=5 format=3 uid="uid://c6d6m2i86dbll"]
+
+[ext_resource type="Script" path="res://scripts/resources/entity/world_entity.gd" id="1_1x7xd"]
+[ext_resource type="PackedScene" uid="uid://sshs6jmyr1aa" path="res://scenes/ai/human.tscn" id="1_fs6c3"]
+[ext_resource type="Texture2D" uid="uid://n6ijoouq0gwe" path="res://assets/entities/human.png" id="2_s3b55"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0phlj"]
+
+[resource]
+script = ExtResource("1_1x7xd")
+name = &"Human"
+texture = ExtResource("2_s3b55")
+collision_shape = SubResource("RectangleShape2D_0phlj")
+ai = ExtResource("1_fs6c3")
+health = 100
+speed = 200
+possible_first_names = {
+"Female": ["Mary", "Patricia", "Jennifer", "Linda", "Elizabeth", "Barbara", "Susan", "Jessica", "Sarah", "Karen"],
+"Male": ["James", "Robert", "John", "Michael", "David", "William", "Richard", "Joseph", "Thomas", "Christopher"],
+"Non-binary": ["Parker", "River", "Rowan", "Riley", "Avery", "Logan", "Quinn", "Jordan", "Cameron", "Angel"]
+}
+possible_last_names = Array[String](["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez"])
+possible_genders = ["Male", "Female", "Non-binary"]
+ai_color = Color(1, 1, 1, 1)
+player_color = Color(0.862745, 0.0784314, 0.235294, 1)
+hover_color = Color(1, 1, 0, 1)

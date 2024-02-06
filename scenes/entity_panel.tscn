@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/entity_panel.gd" id="1_twptf"]
 [ext_resource type="Texture2D" uid="uid://ctf22bbpwivv1" path="res://assets/ui/control.png" id="2_ng1mr"]
-[ext_resource type="Texture2D" uid="uid://c0ta5lfrvun01" path="res://assets/ui/damageLayer 1.png" id="3_6bgfu"]
+[ext_resource type="Texture2D" uid="uid://c0ta5lfrvun01" path="res://assets/ui/damage.png" id="3_fh0ph"]
 
 [node name="EntityPanel" type="Panel"]
 process_mode = 3
@@ -51,18 +51,6 @@ grow_vertical = 0
 texture_filter = 1
 position = Vector2(15, 15)
 texture = ExtResource("2_ng1mr")
-metadata/_aseprite_wizard_config_ = {
-"i_mode": 1,
-"keep_anim_length": false,
-"layer": "",
-"o_ex_p": "",
-"o_folder": "res://assets/ui",
-"o_name": "",
-"only_visible": false,
-"op_exp": true,
-"player": "",
-"source": "res://assets/ui/control.aseprite"
-}
 
 [node name="Damage" type="Button" parent="."]
 layout_mode = 1
@@ -77,19 +65,7 @@ metadata/_edit_group_ = true
 [node name="Sprite2D" type="Sprite2D" parent="Damage"]
 texture_filter = 1
 position = Vector2(15, 15)
-texture = ExtResource("3_6bgfu")
-metadata/_aseprite_wizard_config_ = {
-"i_mode": 1,
-"keep_anim_length": false,
-"layer": "Layer 1",
-"o_ex_p": "",
-"o_folder": "res://assets/ui",
-"o_name": "damage",
-"only_visible": false,
-"op_exp": true,
-"player": "",
-"source": "res://assets/ui/damage.aseprite"
-}
+texture = ExtResource("3_fh0ph")
 
 [connection signal="pressed" from="Control" to="." method="_on_control_pressed"]
 [connection signal="pressed" from="Damage" to="." method="_on_damage_pressed"]

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="WorldResourceNode" load_steps=5 format=3 uid="uid://duqkl15nlmgug"]
+
+[ext_resource type="Resource" uid="uid://bma4k67w330g5" path="res://resources/resources/wood.tres" id="1_k82g0"]
+[ext_resource type="Script" path="res://scripts/resources/resource_node/world_resource_node.gd" id="1_wd3gt"]
+[ext_resource type="Texture2D" uid="uid://bkfgd6j6g7rsd" path="res://icon.svg" id="3_obfwr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q6whu"]
+
+[resource]
+script = ExtResource("1_wd3gt")
+data = ExtResource("1_k82g0")
+name = &"Tree"
+texture = ExtResource("3_obfwr")
+collision_shape = SubResource("RectangleShape2D_q6whu")
+use_times = 5

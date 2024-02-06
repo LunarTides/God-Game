@@ -1,0 +1,27 @@
+[gd_scene load_steps=6 format=3 uid="uid://sshs6jmyr1aa"]
+
+[ext_resource type="Script" path="res://scripts/ai.gd" id="1_3if6i"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/beehave_tree.gd" id="1_bm32d"]
+[ext_resource type="Script" path="res://addons/beehave/nodes/composites/selector.gd" id="2_js7nd"]
+[ext_resource type="Script" path="res://ai/entities/walk_to_position.gd" id="3_8j67k"]
+[ext_resource type="Script" path="res://ai/entities/walk_to_center_of_screen.gd" id="4_ukcbd"]
+
+[node name="AI" type="Node" node_paths=PackedStringArray("walk_to_position", "requires_entity")]
+script = ExtResource("1_3if6i")
+walk_to_position = NodePath("AI/Walk/WalkToPosition")
+requires_entity = [NodePath("AI/Walk/WalkToPosition"), NodePath("AI/Walk/WalkToCenterOfScreen")]
+
+[node name="AI" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
+script = ExtResource("1_bm32d")
+blackboard = NodePath("@Node@17489")
+actor = NodePath("..")
+
+[node name="Walk" type="Node" parent="AI"]
+script = ExtResource("2_js7nd")
+
+[node name="WalkToPosition" type="Node" parent="AI/Walk"]
+script = ExtResource("3_8j67k")
+
+[node name="WalkToCenterOfScreen" type="Node" parent="AI/Walk" node_paths=PackedStringArray("walk_to_position")]
+script = ExtResource("4_ukcbd")
+walk_to_position = NodePath("../WalkToPosition")

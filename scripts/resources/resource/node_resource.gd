@@ -1,5 +1,5 @@
+class_name NodeResource
 extends Node
-class_name WorldResource
 ## A base resource class which defines methods / members that applies to every inanimate resource.
 ## @experimental
 
@@ -11,18 +11,31 @@ class_name WorldResource
 ## The resource's sprite. This should probably be a sibling to the [WorldResource] node.
 @export var sprite: Sprite2D
 
+## The resource's collision node.
+@export var collision_node: CollisionShape2D
+
 ## The resource's Area node.
 @export var area: Area2D
 
-## The resource's name. THIS MUST EQUAL TO THE SCENE FILENAME, IN UPPERCASE, WITH ALL UNDERSCORES REPLACED WITH SPACES.
-@export var resource_name: StringName
+## The resource's unique data.
+var data: WorldResource
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	sprite.texture = data.texture
+	collision_node.shape = data.collision_shape
+	
+	var area_collision_node := CollisionShape2D.new()
+	area_collision_node.shape = data.collision_shape
+	area_collision_node.name = "CollisionShape2D"
+	
+	area.add_child(area_collision_node)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	pass
+	sprite.texture = data.texture
+	collision_node.shape = data.collision_shape
+	
+	area.get_node("CollisionShape2D").shape = data.collision_shape

@@ -1,9 +1,13 @@
 extends Panel
 
 
+## The entity to display for
 var entity: Entity
 
+## The name label on the panel
 @onready var name_label: Label = $Name
+
+## The health label on the panel
 @onready var health_label: Label = $Health
 
 
@@ -22,6 +26,7 @@ func _process(delta):
 	update_labels()
 
 
+## Update labels with the current information
 func update_labels():
 	if not entity:
 		return
@@ -30,11 +35,13 @@ func update_labels():
 	health_label.text = "Health: %s" % entity.health
 
 
+## Open panel, pauses the game
 func open():
 	show()
 	get_tree().paused = true
 
 
+## Close panel, unpauses the game
 func close():
 	hide()
 	get_tree().paused = false

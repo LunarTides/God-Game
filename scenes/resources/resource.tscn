@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://cmlwxr7egnr26"]
+
+[ext_resource type="Script" path="res://scripts/resources/resource/node_resource.gd" id="1_5wxg5"]
+
+[node name="Resource" type="StaticBody2D" groups=["Resources"]]
+collision_layer = 0
+collision_mask = 0
+
+[node name="Data" type="Node" parent="." node_paths=PackedStringArray("body", "sprite", "collision_node", "area")]
+script = ExtResource("1_5wxg5")
+body = NodePath("..")
+sprite = NodePath("../Sprite")
+collision_node = NodePath("../CollisionShape2D")
+area = NodePath("../Area2D")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+modulate = Color(0.72549, 0.4, 0, 1)
+scale = Vector2(0.15625, 0.15625)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="Area2D" type="Area2D" parent="."]

@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://dkk50t5ct42jq"]
+
+[ext_resource type="Script" path="res://scripts/resources/entity/entity.gd" id="1_mg35c"]
+[ext_resource type="Texture2D" uid="uid://n6ijoouq0gwe" path="res://assets/entities/human.png" id="2_s31nn"]
+
+[node name="Entity" type="CharacterBody2D"]
+
+[node name="Data" type="Node" parent="." node_paths=PackedStringArray("body", "sprite", "collision_node", "area")]
+script = ExtResource("1_mg35c")
+body = NodePath("..")
+sprite = NodePath("../Sprite")
+collision_node = NodePath("../CollisionShape2D")
+area = NodePath("../Area2D")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_s31nn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="Area2D" type="Area2D" parent="."]

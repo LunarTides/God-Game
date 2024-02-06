@@ -11,5 +11,5 @@ func tick(actor: Node, blackboard: Blackboard):
 	if actor.position.distance_to(walk_to_position.position) <= entity.target_threshold:
 		return FAILURE
 	
-	walk_to_position.position = get_viewport().size / 2
+	walk_to_position.position = Game.viewport().size / 2
 	return SUCCESS
