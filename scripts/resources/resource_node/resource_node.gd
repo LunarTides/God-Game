@@ -22,6 +22,8 @@ const ResourceScene: PackedScene = preload("res://scenes/resources/resource.tscn
 ## The resource node's unique data.
 var data: WorldResourceNode
 
+var regenerating: bool = false
+
 var _used_times: int = 0
 
 
@@ -52,6 +54,9 @@ func setup(resource_node: WorldResourceNode) -> void:
 
 ## Use the resource node.
 func use() -> void:
+	if regenerating or _used_times >= data.use_times:
+		return
+	
 	_used_times += 1
 	
 	var resource: StaticBody2D = Game.create_resource(data.data)
@@ -59,4 +64,23 @@ func use() -> void:
 	get_tree().root.add_child(resource)
 	
 	if _used_times >= data.use_times:
+		_deplete()
+
+
+func _deplete() -> void:
+	if data.deplete_method == data.DepleteMethod.DESTROY:
 		body.queue_free()
+	elif data.deplete_method == data.DepleteMethod.DEPLETE_PERMANENT:
+		pass
+	elif data.deplete_method == data.DepleteMethod.DEPLETE_REGENERATE:
+		regenerating = true
+		_do_regenerate_cycle()
+
+
+func _do_regenerate_cycle() -> void:
+	if _used_times <= 0:
+		regenerating = false
+		return
+	
+	_used_times -= 1
+	get_tree().create_timer(1, false).timeout.connect(_do_regenerate_cycle)

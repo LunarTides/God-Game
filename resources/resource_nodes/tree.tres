@@ -13,3 +13,4 @@ name = &"Tree"
 texture = ExtResource("3_obfwr")
 collision_shape = SubResource("RectangleShape2D_q6whu")
 use_times = 5
+deplete_method = 0

@@ -16,4 +16,14 @@ extends Resource
 ## The amount of times the resource node can be used.
 @export var use_times: int
 
-# TODO: Add `deplete_method` which can be: `DESTROY`, `DEPLETE_PERMANENT`, `DEPLETE_REGENERATE`
+## What to do when the resource node is depleted.
+@export var deplete_method: DepleteMethod = DepleteMethod.DESTROY
+
+enum DepleteMethod {
+	## Destroy the resource node.
+	DESTROY,
+	## Prevent the resource node from ever being used again.
+	DEPLETE_PERMANENT,
+	## The resource node will start healing. It takes [member use_times] seconds to fully regenerate.
+	DEPLETE_REGENERATE,
+}
