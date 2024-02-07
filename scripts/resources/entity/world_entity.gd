@@ -20,7 +20,7 @@ extends Resource
 @export var speed: int = 200
 
 ## The possible first names for each gender.
-@export var possible_first_names := {
+@export var possible_first_names: Dictionary = {
 	"Male": [],
 	"Female": [],
 	"Non-binary": []
@@ -31,13 +31,13 @@ extends Resource
 
 # CAUTION: Be careful of cancelations on xitter
 ## The possible genders for the entity.
-@export var possible_genders := ["Male", "Female", "Non-binary"]
+@export var possible_genders: Array[String] = ["Male", "Female", "Non-binary"]
 
 ## The color of the sprite's modulate if the AI is controlling it.
-@export var ai_color := Color.WHITE
+@export var ai_color: Color = Color.WHITE
 
 ## The color of the sprite's modulate if the Player is controlling it.
-@export var player_color := Color.CRIMSON
+@export var player_color: Color = Color.CRIMSON
 
 ## The color of the sprite's modulate if the Player is hovering their mouse over it.
-@export var hover_color := Color.YELLOW
+@export var hover_color: Color = Color.YELLOW

@@ -4,7 +4,7 @@ extends Node
 ## @experimental
 
 
-const ResourceScene = preload("res://scenes/resources/resource.tscn")
+const ResourceScene: PackedScene = preload("res://scenes/resources/resource.tscn")
 
 ## The StaticBody of the resource node.
 ## The body should probably be the root of the resource node.
@@ -22,15 +22,15 @@ const ResourceScene = preload("res://scenes/resources/resource.tscn")
 ## The resource node's unique data.
 var data: WorldResourceNode
 
-var _used_times = 0
+var _used_times: int = 0
 
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	sprite.texture = data.texture
 	collision_node.shape = data.collision_shape
 	
-	var area_collision_node := CollisionShape2D.new()
+	var area_collision_node: CollisionShape2D = CollisionShape2D.new()
 	area_collision_node.shape = data.collision_shape
 	area_collision_node.name = "CollisionShape2D"
 	
@@ -38,7 +38,7 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(delta: float) -> void:
 	sprite.texture = data.texture
 	collision_node.shape = data.collision_shape
 	
@@ -46,15 +46,15 @@ func _process(delta):
 
 
 ## Sets up the resource node. You need to do this before using it.
-func setup(resource_node: WorldResourceNode):
+func setup(resource_node: WorldResourceNode) -> void:
 	data = resource_node
 
 
 ## Use the resource node.
-func use():
+func use() -> void:
 	_used_times += 1
 	
-	var resource = Game.create_resource(data.data)
+	var resource: StaticBody2D = Game.create_resource(data.data)
 	resource.global_position = Vector2(body.global_position.x + randf_range(-50.0, 50.0), body.global_position.y + randf_range(-50.0, 50.0))
 	get_tree().root.add_child(resource)
 	

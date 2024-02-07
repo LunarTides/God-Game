@@ -22,11 +22,11 @@ var data: WorldResource
 
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	sprite.texture = data.texture
 	collision_node.shape = data.collision_shape
 	
-	var area_collision_node := CollisionShape2D.new()
+	var area_collision_node: CollisionShape2D = CollisionShape2D.new()
 	area_collision_node.shape = data.collision_shape
 	area_collision_node.name = "CollisionShape2D"
 	
@@ -34,7 +34,7 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(delta: float) -> void:
 	sprite.texture = data.texture
 	collision_node.shape = data.collision_shape
 	

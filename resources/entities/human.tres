@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" uid="uid://n6ijoouq0gwe" path="res://assets/entities/human.png" id="2_s3b55"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0phlj"]
+size = Vector2(32, 32)
 
 [resource]
 script = ExtResource("1_1x7xd")
@@ -20,7 +21,7 @@ possible_first_names = {
 "Non-binary": ["Parker", "River", "Rowan", "Riley", "Avery", "Logan", "Quinn", "Jordan", "Cameron", "Angel"]
 }
 possible_last_names = Array[String](["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez"])
-possible_genders = ["Male", "Female", "Non-binary"]
+possible_genders = Array[String](["Male", "Female", "Non-binary"])
 ai_color = Color(1, 1, 1, 1)
 player_color = Color(0.862745, 0.0784314, 0.235294, 1)
 hover_color = Color(1, 1, 0, 1)

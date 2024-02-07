@@ -8,5 +8,5 @@ extends Node
 
 ## Passes [member entity] to all nodes in [member requires_entity].
 func pass_entity() -> void:
-	for node in requires_entity:
+	for node: BeehaveNode in requires_entity:
 		node.entity = entity

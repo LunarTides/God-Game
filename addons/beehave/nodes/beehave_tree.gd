@@ -121,7 +121,7 @@ func _ready() -> void:
 		process_thread = ProcessThread.PHYSICS
 	
 	# Thank god for open-source software
-	if not is_instance_valid(actor):
+	if not actor:
 		if actor_node_path:
 			actor = get_node(actor_node_path)
 		else:

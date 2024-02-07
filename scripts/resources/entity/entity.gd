@@ -28,11 +28,11 @@ signal target_reached(position: Vector2)
 @export var area: Area2D
 
 ## Whether or not the player is controlling this entity. If so, it disables the AI.
-@export var is_controlling := false
+@export var is_controlling: bool = false
 
 ## How close the entity has to get to its target position before reaching it.
 ## This is to prevent jittering once it reaches its target.
-@export var target_threshold := 5.0
+@export var target_threshold: float = 5.0
 
 var data: WorldEntity:
 	set(new_data):
@@ -44,7 +44,7 @@ var data: WorldEntity:
 			remove_child(ai)
 		
 		# AI
-		var ai_node = data.ai.instantiate()
+		var ai_node: Node = data.ai.instantiate()
 		ai_node.entity = self
 		ai_node.pass_entity()
 		walk_to_position = ai_node.walk_to_position
@@ -54,7 +54,7 @@ var data: WorldEntity:
 		add_sibling(ai)
 		
 		# Area Collision
-		var area_collision_node := CollisionShape2D.new()
+		var area_collision_node: CollisionShape2D = CollisionShape2D.new()
 		area_collision_node.shape = data.collision_shape
 		area_collision_node.name = "CollisionShape2D"
 		
@@ -64,7 +64,7 @@ var data: WorldEntity:
 		generate_name()
 
 ## The entity's gender.
-var gender := "None"
+var gender: String = "None"
 
 ## The abbreviated version of the entity's gender.
 var abv_gender: String:
@@ -77,7 +77,7 @@ var abv_gender: String:
 		return
 
 ## The entity's name.
-var entity_name := "Placeholder"
+var entity_name: String = "Placeholder"
 
 ## The entity's inventory.
 ## This looks something like this: [code]{"Resource Name": [WorldResource:<Node#30232544541>, WorldResource:<Node#59275306838>][/code].
@@ -90,13 +90,13 @@ var ai: BeehaveTree
 ## since every entity should be able to move.
 var walk_to_position: WalkToPosition
 
-var _has_reached_target = false
+var _has_reached_target: bool = false
 
 ## The entity's health.
-@onready var health = data.health
+@onready var health: int = data.health
 
 
-func _ready():
+func _ready() -> void:
 	area.mouse_entered.connect(_hover)
 	area.mouse_exited.connect(_stop_hover)
 	
@@ -106,7 +106,7 @@ func _ready():
 	ai._ready()
 
 
-func _physics_process(delta):
+func _physics_process(delta: float) -> void:
 	# For some reason, when having the ai in its own scene, we need to manually process it here
 	ai._process_internally()
 	
@@ -128,7 +128,7 @@ func _physics_process(delta):
 
 
 ## Deal damage to the entity.
-func damage(amount: int):
+func damage(amount: int) -> void:
 	health -= amount
 	
 	damaged.emit(amount)
@@ -139,47 +139,47 @@ func damage(amount: int):
 
 
 ## Toggle control over the entity.
-func toggle_control():
+func toggle_control() -> void:
 	is_controlling = not is_controlling
 	_reset_modulate()
 
 
 ## Begins moving the entity towards the target node.
-func set_target(target: Node2D):
+func set_target(target: Node2D) -> void:
 	walk_to_position.position = target.global_position
 	_has_reached_target = false
 
 
 ## Begins moving the entity towards the target position.
-func set_target_position(position: Vector2):
+func set_target_position(position: Vector2) -> void:
 	walk_to_position.position = position
 	_has_reached_target = false
 
 
 ## Unsets the target. The AI will resume its normal operations.
-func unset_target():
+func unset_target() -> void:
 	walk_to_position.position = Vector2.ZERO
 	_has_reached_target = false
 
 
 ## Returns if the specified position is the entity's target.
-func target_is_vector(position: Vector2):
+func target_is_vector(position: Vector2) -> bool:
 	return walk_to_position.position == position
 
 
 ## Returns if the specified node is the entity's target.
-func target_is_node(node: Node2D):
+func target_is_node(node: Node2D) -> bool:
 	return walk_to_position.position == node.global_position
 
 
 ## Returns if the entity has a target.
 ## As long as an AI is controlling the entity, this will almost always return true.
-func has_target():
+func has_target() -> bool:
 	return walk_to_position.position != null
 
 
 ## This will emit the target_reached signal if it hasn't been emitted for that target before.
-func emit_target_reached(position: Vector2):
+func emit_target_reached(position: Vector2) -> void:
 	if not _has_reached_target:
 		_has_reached_target = true
 		target_reached.emit(position)
@@ -194,7 +194,7 @@ func pickup_resource(resource: NodeResource) -> bool:
 	if body.position.distance_to(resource.body.global_position) > 5:
 		return false
 	
-	var resource_name = resource.data.name
+	var resource_name: StringName = resource.data.name
 	
 	if not inventory.has(resource_name):
 		inventory[resource_name] = []
@@ -213,7 +213,7 @@ func pickup_resource(resource: NodeResource) -> bool:
 ## Picks up a random resource from around the entity. The resource needs to be right next to the entity for this to work.
 ## Returns if the pickup was successful.
 # TODO: Make this return bool
-func pickup_random_resource(resource: NodeResource):
+func pickup_random_resource(resource: NodeResource) -> void:
 	assert(false, "Not implemented")
 
 
@@ -228,7 +228,7 @@ func walk_to_and_pickup_resource(resource: NodeResource) -> bool:
 ## Walks to and picks up a random resource.
 ## Returns if the pickup was successful.
 # TODO: Make this return bool
-func walk_to_and_pickup_random_resource():
+func walk_to_and_pickup_random_resource() -> void:
 	assert(false, "Not implemented")
 
 
@@ -250,9 +250,9 @@ func walk_to_and_use_resource_node(resource_node: ResourceNode) -> bool:
 	await target_reached
 	
 	# Use up the resource node
-	var result = true
+	var result: bool = true
 	
-	var i = 0
+	var i: int = 0
 	
 	# Use `i` as a backup incase something goes wrong
 	# TODO: Don't use _used_times here
@@ -266,32 +266,32 @@ func walk_to_and_use_resource_node(resource_node: ResourceNode) -> bool:
 
 
 ## Randomize and set the entity's gender.
-func generate_gender():
+func generate_gender() -> void:
 	gender = data.possible_genders.pick_random()
 
 
 ## Generates a random first name, and last name and gives them to the entity.
 ## The first name depends on the gender, and the pool is [member possible_first_names] and [member possible_last_names].
-func generate_name():
+func generate_name() -> void:
 	entity_name = "%s %s" % [data.possible_first_names[gender].pick_random(), data.possible_last_names.pick_random()]
 
 
-func _hover():
+func _hover() -> void:
 	sprite.modulate = data.hover_color
 
 
-func _stop_hover():
+func _stop_hover() -> void:
 	_reset_modulate()
 
 
-func _reset_modulate():
+func _reset_modulate() -> void:
 	sprite.modulate = data.ai_color if not is_controlling else data.player_color
 
 
-func _click():
+func _click() -> void:
 	Game.open_entity_panel(self)
 
 
-func _on_area_input_event(viewport: Node, event: InputEvent, shape_idx: int):
+func _on_area_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	if event.is_action_pressed("left_click"):
 		_click()

@@ -6,7 +6,7 @@ class_name WalkToPosition
 @export var position: Vector2
 
 
-func tick(actor: Node, blackboard: Blackboard):
+func tick(actor: Node, blackboard: Blackboard) -> int:
 	# Move towards the position
 	if not position:
 		return FAILURE

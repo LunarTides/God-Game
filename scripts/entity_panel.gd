@@ -12,11 +12,11 @@ var entity: Entity
 
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	close()
 
 
-func _process(delta):
+func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("right_click"):
 		close()
 	
@@ -27,7 +27,7 @@ func _process(delta):
 
 
 ## Update labels with the current information
-func update_labels():
+func update_labels() -> void:
 	if not entity:
 		return
 	
@@ -36,21 +36,21 @@ func update_labels():
 
 
 ## Open panel, pauses the game
-func open():
+func open() -> void:
 	show()
 	get_tree().paused = true
 
 
 ## Close panel, unpauses the game
-func close():
+func close() -> void:
 	hide()
 	get_tree().paused = false
 
 
-func _on_control_pressed():
+func _on_control_pressed() -> void:
 	entity.toggle_control()
 	close()
 
 
-func _on_damage_pressed():
+func _on_damage_pressed() -> void:
 	entity.damage(5)
