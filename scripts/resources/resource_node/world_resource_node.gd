@@ -1,9 +1,6 @@
 class_name WorldResourceNode
 extends Resource
 
-## The resource that the resource node drops.
-@export var data: WorldResource
-
 ## The name of the resource node.
 @export var name: StringName
 
@@ -15,6 +12,9 @@ extends Resource
 
 ## The amount of times the resource node can be used.
 @export var use_times: int
+
+## The resource that the resource node drops.
+@export var resource: WorldResource
 
 ## What to do when the resource node is depleted.
 @export var deplete_method: DepleteMethod = DepleteMethod.DESTROY

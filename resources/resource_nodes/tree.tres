@@ -8,9 +8,9 @@
 
 [resource]
 script = ExtResource("1_wd3gt")
-data = ExtResource("1_k82g0")
 name = &"Tree"
 texture = ExtResource("3_b1ioa")
 collision_shape = SubResource("RectangleShape2D_q6whu")
 use_times = 5
+resource = ExtResource("1_k82g0")
 deplete_method = 0

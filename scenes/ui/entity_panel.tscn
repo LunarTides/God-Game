@@ -1,10 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://ctb6jd8v40e14"]
+[gd_scene load_steps=5 format=3 uid="uid://ctb6jd8v40e14"]
 
 [ext_resource type="Script" path="res://scripts/entity_panel.gd" id="1_twptf"]
 [ext_resource type="Texture2D" uid="uid://ctf22bbpwivv1" path="res://assets/ui/control.png" id="2_ng1mr"]
+[ext_resource type="PackedScene" uid="uid://6eiwtbaqjc7n" path="res://scenes/ui/item.tscn" id="2_s7dkw"]
 [ext_resource type="Texture2D" uid="uid://c0ta5lfrvun01" path="res://assets/ui/damage.png" id="3_fh0ph"]
 
-[node name="EntityPanel" type="Panel"]
+[node name="EntityPanel" type="Panel" node_paths=PackedStringArray("inventory")]
 process_mode = 3
 top_level = true
 anchors_preset = 15
@@ -18,6 +19,25 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 script = ExtResource("1_twptf")
+inventory = NodePath("Inventory/FlowContainer")
+
+[node name="Inventory" type="ScrollContainer" parent="."]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 54.0
+offset_right = 352.0
+offset_bottom = 525.0
+
+[node name="FlowContainer" type="FlowContainer" parent="Inventory"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Item" parent="Inventory/FlowContainer" instance=ExtResource("2_s7dkw")]
+layout_mode = 2
+
+[node name="Item2" parent="Inventory/FlowContainer" instance=ExtResource("2_s7dkw")]
+layout_mode = 2
 
 [node name="Name" type="Label" parent="."]
 layout_mode = 0
@@ -30,9 +50,9 @@ text = "Name (Gender)"
 [node name="Health" type="Label" parent="."]
 layout_mode = 0
 offset_left = 4.0
-offset_top = 56.0
+offset_top = 25.0
 offset_right = 96.0
-offset_bottom = 148.0
+offset_bottom = 117.0
 text = "Health: 0"
 
 [node name="Control" type="Button" parent="."]

@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://6eiwtbaqjc7n"]
+
+[ext_resource type="Script" path="res://scripts/ui/item.gd" id="1_hs2ea"]
+[ext_resource type="Texture2D" uid="uid://be4y0u2k08ha7" path="res://assets/resources/wood.png" id="2_0fpoy"]
+
+[node name="Item" type="Control"]
+custom_minimum_size = Vector2(38, 38)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_hs2ea")
+
+[node name="Texture" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+texture = ExtResource("2_0fpoy")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_top = 17.0
+offset_right = 40.0
+offset_bottom = 40.0
+text = "1"
+horizontal_alignment = 2

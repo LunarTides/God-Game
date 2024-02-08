@@ -59,7 +59,7 @@ func use() -> void:
 	
 	_used_times += 1
 	
-	var resource: StaticBody2D = Game.create_resource(data.data)
+	var resource: StaticBody2D = Game.create_resource(data.resource)
 	resource.global_position = Vector2(body.global_position.x + randf_range(-50.0, 50.0), body.global_position.y + randf_range(-50.0, 50.0))
 	get_tree().root.add_child(resource)
 	

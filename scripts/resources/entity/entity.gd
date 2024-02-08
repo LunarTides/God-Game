@@ -208,13 +208,9 @@ func pickup_resource(resource: NodeResource) -> bool:
 	if not is_instance_valid(resource) or resource in inventory[resource.data.name]:
 		return false
 	
-	# FIXME: All resources except the last one gets freed
-	inventory[resource_name].append(resource)
+	inventory[resource_name].append(resource.data)
 	
 	resource.body.queue_free()
-	
-	# TODO: Remove
-	print_debug(inventory)
 	return true
 
 
@@ -289,7 +285,7 @@ func walk_to_and_use_resource_node(resource_node: ResourceNode) -> bool:
 	
 	# Use `i` as a backup incase something goes wrong
 	# TODO: Don't use _used_times here
-	while resource_node._used_times < resource_node.data.use_times and i < resource_node.data.use_times:
+	while resource_node._used_times < resource_node.data.use_times and i < resource_node.data.use_times and is_instance_valid(resource_node):
 		await get_tree().create_timer(1, false).timeout
 		
 		result = result and use_resource_node(resource_node)

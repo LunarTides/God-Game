@@ -1,6 +1,10 @@
 extends Panel
 
 
+const Item: Resource = preload("res://scenes/ui/item.tscn")
+
+@export var inventory: FlowContainer
+
 ## The entity to display for
 var entity: Entity
 
@@ -37,6 +41,13 @@ func update_labels() -> void:
 
 ## Open panel, pauses the game
 func open() -> void:
+	# Add the inventory items to the ui
+	for item_name: Variant in entity.inventory.keys():
+		var item: Control = Item.instantiate()
+		item.texture = entity.inventory[item_name][0].texture
+		item.count = entity.inventory[item_name].size()
+		inventory.add_child(item)
+	
 	show()
 	get_tree().paused = true
 
@@ -45,6 +56,10 @@ func open() -> void:
 func close() -> void:
 	hide()
 	get_tree().paused = false
+	
+	# Remove the inventory items
+	for child: Control in inventory.get_children():
+		child.queue_free()
 
 
 func _on_control_pressed() -> void:
