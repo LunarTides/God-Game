@@ -14,10 +14,6 @@ const TreeResource: WorldResourceNode = preload("res://resources/resource_nodes/
 var moving: bool = false
 var entity: Entity
 
-# TODO: Remove at some point
-var wood: StaticBody2D
-var tree: StaticBody2D
-
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -29,7 +25,7 @@ func _ready() -> void:
 	human1.name = "Human1"
 	add_child(human1)
 	
-	entity = human1.get_node("Data")
+	entity = Game.get_entity_from_body(human1)
 	
 	# Human 2
 	var human2: CharacterBody2D = Game.create_entity(HumanResource)
@@ -42,14 +38,12 @@ func _ready() -> void:
 	wood.position = Vector2(949, 403)
 	wood.name = "Wood"
 	add_child(wood)
-	self.wood = wood
 	
 	# Tree
 	var tree: StaticBody2D = Game.create_resource_node(TreeResource)
 	tree.position = Vector2i(172, 481)
 	tree.name = "Tree"
 	add_child(tree)
-	self.tree = tree
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -59,38 +53,34 @@ func _process(delta: float) -> void:
 
 # TODO: Remove at some point
 func _unhandled_input(event: InputEvent) -> void:
+	if not event.as_text().is_valid_int():
+		return
 	if not event.is_released():
 		return
+	if not is_instance_valid(entity):
+		return
 	
-	if event.as_text() == "0":
-		if not is_instance_valid(entity):
-			print_debug("The entity is not valid")
-			return
+	if moving:
+		entity.unset_target()
+	
+	moving = not moving
+	
+	match event.as_text():
+		"0":
+			# This should keep the entity in-place for a short time
+			entity.set_target(entity.body)
+		"1":
+			print_debug(await entity.walk_to_and_pickup_random_resource())
+		"2":
+			print_debug(await entity.walk_to_and_use_random_resource_node())
+		"3":
+			print_debug(entity.pickup_random_nearby_resource())
+		"4":
+			print_debug(entity.use_random_nearby_resource_node())
+		"5":
+			# Switch entity
+			var human1_entity: Entity = Game.get_entity_from_body($Human1 as CharacterBody2D)
+			var human2_entity: Entity = Game.get_entity_from_body($Human2 as CharacterBody2D)
+			
+			entity = human1_entity if entity == human2_entity else human2_entity
 		
-		if not is_instance_valid(wood):
-			print_debug("The wood body is not valid")
-			entity.unset_target()
-			return
-		
-		if moving:
-			entity.unset_target()
-		else:
-			entity.walk_to_and_pickup_resource(wood.get_node("Data") as NodeResource)
-		
-		moving = not moving
-	elif event.as_text() == "1":
-		if not is_instance_valid(entity):
-			print_debug("The entity is not valid")
-			return
-		
-		if not is_instance_valid(tree):
-			print_debug("The tree body is not valid")
-			entity.unset_target()
-			return
-		
-		if moving:
-			entity.unset_target()
-		else:
-			entity.walk_to_and_use_resource_node(tree.get_node("Data") as ResourceNode)
-		
-		moving = not moving

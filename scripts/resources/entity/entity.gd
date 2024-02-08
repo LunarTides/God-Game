@@ -34,6 +34,9 @@ signal target_reached(position: Vector2)
 ## This is to prevent jittering once it reaches its target.
 @export var target_threshold: float = 5.0
 
+## The reach that the entity has. The entity can only pick up/use resources/resource nodes within this reach.
+@export var reach: float = 5.0
+
 var data: WorldEntity:
 	set(new_data):
 		data = new_data
@@ -190,8 +193,7 @@ func emit_target_reached(position: Vector2) -> void:
 # TODO: Add ability for players to do this
 func pickup_resource(resource: NodeResource) -> bool:
 	# Check if the resource is in a certain radius around the entity
-	# TODO: Don't hardcode the distance value
-	if body.position.distance_to(resource.body.global_position) > 5:
+	if not _is_node_in_range(resource.body):
 		return false
 	
 	var resource_name: StringName = resource.data.name
@@ -202,19 +204,27 @@ func pickup_resource(resource: NodeResource) -> bool:
 	if not is_instance_valid(resource) or resource in inventory[resource.data.name]:
 		return false
 	
+	# FIXME: All resources except the last one gets freed
 	inventory[resource_name].append(resource)
 	
 	resource.body.queue_free()
 	
+	# TODO: Remove
 	print_debug(inventory)
 	return true
 
 
 ## Picks up a random resource from around the entity. The resource needs to be right next to the entity for this to work.
 ## Returns if the pickup was successful.
-# TODO: Make this return bool
-func pickup_random_resource(resource: NodeResource) -> void:
-	assert(false, "Not implemented")
+func pickup_random_nearby_resource() -> bool:
+	var resource_body: StaticBody2D = get_random_nearby_resource()
+	if not resource_body:
+		return false
+	
+	var resource: NodeResource = Game.get_resource_from_body(resource_body)
+	
+	pickup_resource(resource)
+	return true
 
 
 ## Walks to the specified resource, then picks it up.
@@ -227,19 +237,38 @@ func walk_to_and_pickup_resource(resource: NodeResource) -> bool:
 
 ## Walks to and picks up a random resource.
 ## Returns if the pickup was successful.
-# TODO: Make this return bool
-func walk_to_and_pickup_random_resource() -> void:
-	assert(false, "Not implemented")
+func walk_to_and_pickup_random_resource() -> bool:
+	var resource_body: StaticBody2D = Game.get_random_resource()
+	if not resource_body:
+		return false
+	
+	var resource: NodeResource = Game.get_resource_from_body(resource_body)
+	
+	await walk_to_and_pickup_resource(resource)
+	return true
 
 
 ## Uses the specified resource node. The resource node needs to be right next to the entity for this to work.
 ## Returns if the usage was successful.
 func use_resource_node(resource_node: ResourceNode) -> bool:
 	# Check if the resource node is in a certain radius around the entity
-	if body.position.distance_to(resource_node.body.global_position) > 5:
+	if not _is_node_in_range(resource_node.body):
 		return false
 	
 	resource_node.use()
+	return true
+
+
+## Uses a random resource node from around the entity. The resource node needs to be right next to the entity for this to work.
+## Returns if the use was successful.
+func use_random_nearby_resource_node() -> bool:
+	var resource_node_body: StaticBody2D = get_random_nearby_resource_node()
+	if not resource_node_body:
+		return false
+	
+	var resource_node: ResourceNode = Game.get_resource_node_from_body(resource_node_body)
+	
+	use_resource_node(resource_node)
 	return true
 
 
@@ -265,6 +294,19 @@ func walk_to_and_use_resource_node(resource_node: ResourceNode) -> bool:
 	return result
 
 
+## Walks to and uses up a random resource node.
+## Returns if the use was successful.
+func walk_to_and_use_random_resource_node() -> bool:
+	var resource_node_body: StaticBody2D = Game.get_random_resource_node()
+	if not resource_node_body:
+		return false
+	
+	var resource_node: ResourceNode = Game.get_resource_node_from_body(resource_node_body)
+	
+	await walk_to_and_use_resource_node(resource_node)
+	return true
+
+
 ## Randomize and set the entity's gender.
 func generate_gender() -> void:
 	gender = data.possible_genders.pick_random()
@@ -274,6 +316,20 @@ func generate_gender() -> void:
 ## The first name depends on the gender, and the pool is [member possible_first_names] and [member possible_last_names].
 func generate_name() -> void:
 	entity_name = "%s %s" % [data.possible_first_names[gender].pick_random(), data.possible_last_names.pick_random()]
+
+
+## Returns a random resource that is in range of the entity.
+## 
+## [br][br][b]Note:[/b] Returns [code]null[/code] if no valid resource was found.
+func get_random_nearby_resource() -> StaticBody2D:
+	return _get_random_nearby_node_in_group("Resources") as StaticBody2D
+
+
+## Returns a random resource node that is in range of the entity.
+## 
+## [br][br][b]Note:[/b] Returns [code]null[/code] if no valid resource node was found.
+func get_random_nearby_resource_node() -> StaticBody2D:
+	return _get_random_nearby_node_in_group("Resource Nodes") as StaticBody2D
 
 
 func _hover() -> void:
@@ -286,6 +342,18 @@ func _stop_hover() -> void:
 
 func _reset_modulate() -> void:
 	sprite.modulate = data.ai_color if not is_controlling else data.player_color
+
+
+func _is_node_in_range(node: Node2D) -> bool:
+	return body.position.distance_to(node.global_position) <= reach
+
+
+func _get_random_nearby_node_in_group(group: StringName) -> Node2D:
+	var nodes: Array[Node] = get_tree().get_nodes_in_group(group).filter(_is_node_in_range)
+	if nodes.size() == 0:
+		return null
+	
+	return nodes.pick_random()
 
 
 func _click() -> void:
