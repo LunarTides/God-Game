@@ -15,7 +15,6 @@ collision_node = NodePath("../CollisionShape2D")
 area = NodePath("../Area2D")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-scale = Vector2(0.15625, 0.15625)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 

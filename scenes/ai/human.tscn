@@ -13,7 +13,7 @@ requires_entity = [NodePath("AI/Walk/WalkToPosition"), NodePath("AI/Walk/WalkToC
 
 [node name="AI" type="Node" parent="." node_paths=PackedStringArray("blackboard", "actor")]
 script = ExtResource("1_bm32d")
-blackboard = NodePath("@Node@17489")
+blackboard = NodePath("@Node@17483")
 actor = NodePath("..")
 
 [node name="Walk" type="Node" parent="AI"]
