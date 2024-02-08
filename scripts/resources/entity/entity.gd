@@ -120,6 +120,11 @@ func _physics_process(delta: float) -> void:
 	if is_controlling:
 		# Control the entity
 		body.velocity = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+		
+		if Input.is_action_just_pressed("pickup"):
+			pickup_random_nearby_resource()
+		elif Input.is_action_just_pressed("harvest"):
+			use_random_nearby_resource_node()
 	
 	body.velocity = body.velocity.normalized() * 16 * data.speed * delta
 	
@@ -190,7 +195,6 @@ func emit_target_reached(position: Vector2) -> void:
 
 ## Picks up the specified resource. The resource needs to be right next to the entity for this to work.
 ## Returns if the pickup was successful.
-# TODO: Add ability for players to do this
 func pickup_resource(resource: NodeResource) -> bool:
 	# Check if the resource is in a certain radius around the entity
 	if not _is_node_in_range(resource.body):
@@ -345,7 +349,10 @@ func _reset_modulate() -> void:
 
 
 func _is_node_in_range(node: Node2D) -> bool:
-	return body.position.distance_to(node.global_position) <= reach
+	# If the player is controlling the entity, 10x its reach
+	var range: float = reach if not is_controlling else reach * 10
+	
+	return body.position.distance_to(node.global_position) <= range
 
 
 func _get_random_nearby_node_in_group(group: StringName) -> Node2D:
