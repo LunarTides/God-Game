@@ -19,42 +19,39 @@ const ResourceScene: PackedScene = preload("res://scenes/resources/resource.tscn
 ## The resource node's Area node.
 @export var area: Area2D
 
-## The resource node's unique data.
-var data: WorldResourceNode
+## The resource node's unique data. Set this before
+var data: WorldResourceNode:
+	set(new_data):
+		data = new_data
+		
+		sprite.texture = data.texture
+		collision_node.shape = data.collision_shape
+		
+		if area.has_node("CollisionShape2D"):
+			area.get_node("CollisionShape2D").shape = data.collision_shape
+		else:
+			var area_collision_node: CollisionShape2D = CollisionShape2D.new()
+			area_collision_node.shape = data.collision_shape
+			area_collision_node.name = "CollisionShape2D"
+			
+			area.add_child(area_collision_node)
 
-var regenerating: bool = false
+## Whether or not the resource node is regenerating. Only works if [member data.deplete_method] is [enum DEPLETE_REGENERATE]
+var is_regenerating: bool = false
+
+## Whether or not the resource node is depleted.
+var is_depleted: bool:
+	get:
+		return _used_times >= data.use_times
+	set(_new_depleted):
+		assert(false, "Don't set `is_depleted`")
 
 var _used_times: int = 0
 
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	sprite.texture = data.texture
-	collision_node.shape = data.collision_shape
-	
-	var area_collision_node: CollisionShape2D = CollisionShape2D.new()
-	area_collision_node.shape = data.collision_shape
-	area_collision_node.name = "CollisionShape2D"
-	
-	area.add_child(area_collision_node)
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	sprite.texture = data.texture
-	collision_node.shape = data.collision_shape
-	
-	area.get_node("CollisionShape2D").shape = data.collision_shape
-
-
-## Sets up the resource node. You need to do this before using it.
-func setup(resource_node: WorldResourceNode) -> void:
-	data = resource_node
-
-
 ## Use the resource node.
 func use() -> void:
-	if regenerating or _used_times >= data.use_times:
+	if is_regenerating or is_depleted:
 		return
 	
 	_used_times += 1
@@ -63,7 +60,7 @@ func use() -> void:
 	resource.global_position = Vector2(body.global_position.x + randf_range(-50.0, 50.0), body.global_position.y + randf_range(-50.0, 50.0))
 	get_tree().root.add_child(resource)
 	
-	if _used_times >= data.use_times:
+	if is_depleted:
 		_deplete()
 
 
@@ -73,13 +70,13 @@ func _deplete() -> void:
 	elif data.deplete_method == data.DepleteMethod.DEPLETE_PERMANENT:
 		pass
 	elif data.deplete_method == data.DepleteMethod.DEPLETE_REGENERATE:
-		regenerating = true
+		is_regenerating = true
 		_do_regenerate_cycle()
 
 
 func _do_regenerate_cycle() -> void:
 	if _used_times <= 0:
-		regenerating = false
+		is_regenerating = false
 		return
 	
 	_used_times -= 1

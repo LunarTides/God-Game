@@ -42,7 +42,7 @@ func update_labels() -> void:
 ## Open panel, pauses the game
 func open() -> void:
 	# Add the inventory items to the ui
-	for item_name: Variant in entity.inventory.keys():
+	for item_name: String in entity.inventory.keys():
 		var item: Control = Item.instantiate()
 		item.texture = entity.inventory[item_name][0].texture
 		item.count = entity.inventory[item_name].size()

@@ -18,24 +18,18 @@ extends Node
 @export var area: Area2D
 
 ## The resource's unique data.
-var data: WorldResource
-
-
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	sprite.texture = data.texture
-	collision_node.shape = data.collision_shape
-	
-	var area_collision_node: CollisionShape2D = CollisionShape2D.new()
-	area_collision_node.shape = data.collision_shape
-	area_collision_node.name = "CollisionShape2D"
-	
-	area.add_child(area_collision_node)
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	sprite.texture = data.texture
-	collision_node.shape = data.collision_shape
-	
-	area.get_node("CollisionShape2D").shape = data.collision_shape
+var data: WorldResource:
+	set(new_data):
+		data = new_data
+		
+		sprite.texture = data.texture
+		collision_node.shape = data.collision_shape
+		
+		if area.has_node("CollisionShape2D"):
+			area.get_node("CollisionShape2D").shape = data.collision_shape
+		else:
+			var area_collision_node: CollisionShape2D = CollisionShape2D.new()
+			area_collision_node.shape = data.collision_shape
+			area_collision_node.name = "CollisionShape2D"
+			
+			area.add_child(area_collision_node)

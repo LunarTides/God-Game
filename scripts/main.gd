@@ -3,6 +3,7 @@ extends Node2D
 
 const HumanResource: WorldEntity = preload("res://resources/entities/human.tres")
 const WoodResource: WorldResource = preload("res://resources/resources/wood.tres")
+const StoneResource: WorldResource = preload("res://resources/resources/stone.tres")
 const TreeResource: WorldResourceNode = preload("res://resources/resource_nodes/tree.tres")
 
 @export var entity_panel: Panel
@@ -83,4 +84,16 @@ func _unhandled_input(event: InputEvent) -> void:
 			var human2_entity: Entity = Game.get_entity_from_body($Human2 as CharacterBody2D)
 			
 			entity = human1_entity if entity == human2_entity else human2_entity
-		
+		"6":
+			# Turn a random resource to stone
+			var resource_body: StaticBody2D = Game.get_random_resource()
+			if not resource_body:
+				print_debug("No resource found!")
+				return
+			
+			var resource: NodeResource = Game.get_resource_from_body(resource_body)
+			if resource.data == StoneResource:
+				print_debug("That resource is already a stone!")
+				return
+			
+			resource.data = StoneResource

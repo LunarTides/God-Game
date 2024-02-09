@@ -284,8 +284,7 @@ func walk_to_and_use_resource_node(resource_node: ResourceNode) -> bool:
 	var i: int = 0
 	
 	# Use `i` as a backup incase something goes wrong
-	# TODO: Don't use _used_times here
-	while resource_node._used_times < resource_node.data.use_times and i < resource_node.data.use_times and is_instance_valid(resource_node):
+	while not resource_node.is_depleted and i < resource_node.data.use_times and is_instance_valid(resource_node):
 		await get_tree().create_timer(1, false).timeout
 		
 		result = result and use_resource_node(resource_node)
