@@ -1,14 +1,23 @@
 extends Control
 
 
-@export var texture: Texture2D
+@export var resource: WorldResource:
+	set(new_resource):
+		resource = new_resource
+		
+		if is_instance_valid($Texture):
+			$Texture.texture = resource.texture
+			$Label.text = str(count)
+			tooltip_text = resource.name
+		
 @export var count: int
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	$Texture.texture = texture
+	$Texture.texture = resource.texture
 	$Label.text = str(count)
+	tooltip_text = resource.name
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

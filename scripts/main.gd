@@ -12,7 +12,6 @@ const TreeResource: WorldResourceNode = preload("res://resources/resource_nodes/
 @export var human_spawn_1: Node2D
 @export var human_spawn_2: Node2D
 
-var moving: bool = false
 var entity: Entity
 
 
@@ -61,23 +60,17 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not is_instance_valid(entity):
 		return
 	
-	if moving:
-		entity.unset_target()
-	
-	moving = not moving
-	
 	match event.as_text():
 		"0":
-			# This should keep the entity in-place for a short time
-			entity.set_target(entity.body)
+			entity.unset_target()
 		"1":
-			print_debug(await entity.walk_to_and_pickup_random_resource())
+			entity.walk_to_and_pickup_random_resource()
 		"2":
-			print_debug(await entity.walk_to_and_use_random_resource_node())
+			entity.walk_to_and_use_random_resource_node()
 		"3":
-			print_debug(entity.pickup_random_nearby_resource())
+			entity.pickup_random_nearby_resource()
 		"4":
-			print_debug(entity.use_random_nearby_resource_node())
+			entity.use_random_nearby_resource_node()
 		"5":
 			# Switch entity
 			var human1_entity: Entity = Game.get_entity_from_body($Human1 as CharacterBody2D)
@@ -97,3 +90,6 @@ func _unhandled_input(event: InputEvent) -> void:
 				return
 			
 			resource.data = StoneResource
+		"9":
+			# This should keep the entity in-place for a short time
+			entity.set_target(entity.body)

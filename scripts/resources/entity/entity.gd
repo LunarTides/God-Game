@@ -3,7 +3,7 @@ extends Node
 ## A base entity class which defines methods / members that applies to every living entity.
 ## @experimental
 
-
+#region signals
 ## Emitted when the entity is damaged.
 signal damaged(amount: int)
 
@@ -13,7 +13,11 @@ signal killed
 ## Emitted when the entity reaches its target.
 signal target_reached(position: Vector2)
 
+## Emitted when the entity switches its target.
+signal target_switched(position: Vector2)
+#endregion
 
+#region exported variables
 ## The CharacterBody of the entity. This will be the thing that moves.
 ## The CharacterBody should probably be the root of the entity.
 @export var body: CharacterBody2D
@@ -36,7 +40,9 @@ signal target_reached(position: Vector2)
 
 ## The reach that the entity has. The entity can only pick up/use resources/resource nodes within this reach.
 @export var reach: float = 5.0
+#endregion
 
+#region public variables
 var data: WorldEntity:
 	set(new_data):
 		data = new_data
@@ -92,13 +98,20 @@ var ai: BeehaveTree
 ## The WalkToPosition AI node. Every entity should have this node in the AI tree,
 ## since every entity should be able to move.
 var walk_to_position: WalkToPosition
+#endregion
 
+#region private variables
 var _has_reached_target: bool = false
+var _is_walking_to_resource_node: bool = false
+#endregion
 
+#region onready variables
 ## The entity's health.
 @onready var health: int = data.health
+#endregion
 
 
+#region override functions
 func _ready() -> void:
 	area.mouse_entered.connect(_hover)
 	area.mouse_exited.connect(_stop_hover)
@@ -133,8 +146,11 @@ func _physics_process(delta: float) -> void:
 			body.move_and_slide()
 	else:
 		body.move_and_slide()
+#endregion
 
 
+#region public functions
+#region general functions
 ## Deal damage to the entity.
 func damage(amount: int) -> void:
 	health -= amount
@@ -152,22 +168,36 @@ func toggle_control() -> void:
 	_reset_modulate()
 
 
+## Randomize and set the entity's gender.
+func generate_gender() -> void:
+	gender = data.possible_genders.pick_random()
+
+
+## Generates a random first name, and last name and gives them to the entity.
+## The first name depends on the gender, and the pool is [member possible_first_names] and [member possible_last_names].
+func generate_name() -> void:
+	entity_name = "%s %s" % [data.possible_first_names[gender].pick_random(), data.possible_last_names.pick_random()]
+#endregion
+
+
+#region target functions
 ## Begins moving the entity towards the target node.
 func set_target(target: Node2D) -> void:
-	walk_to_position.position = target.global_position
-	_has_reached_target = false
+	set_target_position(target.global_position)
 
 
 ## Begins moving the entity towards the target position.
 func set_target_position(position: Vector2) -> void:
 	walk_to_position.position = position
 	_has_reached_target = false
+	target_switched.emit(position)
 
 
 ## Unsets the target. The AI will resume its normal operations.
 func unset_target() -> void:
 	walk_to_position.position = Vector2.ZERO
 	_has_reached_target = false
+	target_switched.emit(Vector2.ZERO)
 
 
 ## Returns if the specified position is the entity's target.
@@ -191,13 +221,15 @@ func emit_target_reached(position: Vector2) -> void:
 	if not _has_reached_target:
 		_has_reached_target = true
 		target_reached.emit(position)
+#endregion
 
 
+#region resource functions
 ## Picks up the specified resource. The resource needs to be right next to the entity for this to work.
 ## Returns if the pickup was successful.
 func pickup_resource(resource: NodeResource) -> bool:
 	# Check if the resource is in a certain radius around the entity
-	if not _is_node_in_range(resource.body):
+	if not _is_node_in_range(resource.body) or resource.body.is_queued_for_deletion():
 		return false
 	
 	var resource_name: StringName = resource.data.name
@@ -248,6 +280,15 @@ func walk_to_and_pickup_random_resource() -> bool:
 	return true
 
 
+## Returns a random resource that is in range of the entity.
+## 
+## [br][br][b]Note:[/b] Returns [code]null[/code] if no valid resource was found.
+func get_random_nearby_resource() -> StaticBody2D:
+	return _get_random_nearby_node_in_group("Resources") as StaticBody2D
+#endregion
+
+
+#region resource node functions
 ## Uses the specified resource node. The resource node needs to be right next to the entity for this to work.
 ## Returns if the usage was successful.
 func use_resource_node(resource_node: ResourceNode) -> bool:
@@ -276,19 +317,35 @@ func use_random_nearby_resource_node() -> bool:
 ## Returns if the usage was successful.
 func walk_to_and_use_resource_node(resource_node: ResourceNode) -> bool:
 	set_target(resource_node.body)
+	
+	# If the entity is already walking towards the resource node, stop.
+	# This is so it doesn't stack and use up the resource node in 1 second.
+	if _is_walking_to_resource_node:
+		return false
+	
+	_is_walking_to_resource_node = true
+	
 	await target_reached
+	
+	# If the player is controlling the entity by the time it reaches the resource node, stop.
+	if is_controlling:
+		return false
 	
 	# Use up the resource node
 	var result: bool = true
-	
 	var i: int = 0
 	
 	# Use `i` as a backup incase something goes wrong
-	while not resource_node.is_depleted and i < resource_node.data.use_times and is_instance_valid(resource_node):
+	while not resource_node.is_depleted and i < resource_node.data.use_times:
 		await get_tree().create_timer(1, false).timeout
+		if not is_instance_valid(resource_node):
+			result = false
+			break
 		
 		result = result and use_resource_node(resource_node)
 		i += 1
+	
+	_is_walking_to_resource_node = false
 	
 	return result
 
@@ -306,31 +363,16 @@ func walk_to_and_use_random_resource_node() -> bool:
 	return true
 
 
-## Randomize and set the entity's gender.
-func generate_gender() -> void:
-	gender = data.possible_genders.pick_random()
-
-
-## Generates a random first name, and last name and gives them to the entity.
-## The first name depends on the gender, and the pool is [member possible_first_names] and [member possible_last_names].
-func generate_name() -> void:
-	entity_name = "%s %s" % [data.possible_first_names[gender].pick_random(), data.possible_last_names.pick_random()]
-
-
-## Returns a random resource that is in range of the entity.
-## 
-## [br][br][b]Note:[/b] Returns [code]null[/code] if no valid resource was found.
-func get_random_nearby_resource() -> StaticBody2D:
-	return _get_random_nearby_node_in_group("Resources") as StaticBody2D
-
-
 ## Returns a random resource node that is in range of the entity.
 ## 
 ## [br][br][b]Note:[/b] Returns [code]null[/code] if no valid resource node was found.
 func get_random_nearby_resource_node() -> StaticBody2D:
 	return _get_random_nearby_node_in_group("Resource Nodes") as StaticBody2D
+#endregion
+#endregion
 
 
+#region private functions
 func _hover() -> void:
 	sprite.modulate = data.hover_color
 
@@ -365,3 +407,4 @@ func _click() -> void:
 func _on_area_input_event(viewport: Node, event: InputEvent, shape_idx: int) -> void:
 	if event.is_action_pressed("left_click"):
 		_click()
+#endregion

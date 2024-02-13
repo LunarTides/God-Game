@@ -1,15 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://6eiwtbaqjc7n"]
+[gd_scene load_steps=4 format=3 uid="uid://6eiwtbaqjc7n"]
 
 [ext_resource type="Script" path="res://scripts/ui/item.gd" id="1_hs2ea"]
 [ext_resource type="Texture2D" uid="uid://be4y0u2k08ha7" path="res://assets/resources/wood.png" id="2_0fpoy"]
+[ext_resource type="Resource" uid="uid://bma4k67w330g5" path="res://resources/resources/wood.tres" id="2_o1w01"]
 
 [node name="Item" type="Control"]
-custom_minimum_size = Vector2(38, 38)
+custom_minimum_size = Vector2(40, 40)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("1_hs2ea")
+resource = ExtResource("2_o1w01")
 
 [node name="Texture" type="TextureRect" parent="."]
 layout_mode = 0

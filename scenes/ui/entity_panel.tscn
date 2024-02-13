@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://ctb6jd8v40e14"]
 
-[ext_resource type="Script" path="res://scripts/entity_panel.gd" id="1_twptf"]
+[ext_resource type="Script" path="res://scripts/ui/entity_panel.gd" id="1_twptf"]
 [ext_resource type="Texture2D" uid="uid://ctf22bbpwivv1" path="res://assets/ui/control.png" id="2_ng1mr"]
 [ext_resource type="PackedScene" uid="uid://6eiwtbaqjc7n" path="res://scenes/ui/item.tscn" id="2_s7dkw"]
 [ext_resource type="Texture2D" uid="uid://c0ta5lfrvun01" path="res://assets/ui/damage.png" id="3_fh0ph"]
@@ -66,6 +66,7 @@ offset_left = -31.0
 offset_top = -31.0
 grow_horizontal = 0
 grow_vertical = 0
+tooltip_text = "Control"
 
 [node name="Sprite2D" type="Sprite2D" parent="Control"]
 texture_filter = 1
@@ -80,6 +81,7 @@ anchor_bottom = 1.0
 offset_top = -31.0
 offset_right = 31.0
 grow_vertical = 0
+tooltip_text = "Deal 5 damage"
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="Damage"]

@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=3 uid="uid://dtw8lmoqai6wx"]
+[gd_scene load_steps=3 format=3 uid="uid://yjvpm2bj3tjo"]
 
 [ext_resource type="Script" path="res://scripts/resources/resource_node/resource_node.gd" id="1_u85e5"]
+[ext_resource type="Texture2D" uid="uid://371h076qcrjf" path="res://assets/resource_nodes/tree.png" id="2_xiwvx"]
 
 [node name="ResourceNode" type="StaticBody2D" groups=["Resource Nodes"]]
 modulate = Color(0, 1, 0, 1)
@@ -15,6 +16,7 @@ collision_node = NodePath("../CollisionShape2D")
 area = NodePath("../Area2D")
 
 [node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_xiwvx")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 

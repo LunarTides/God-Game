@@ -44,8 +44,10 @@ func open() -> void:
 	# Add the inventory items to the ui
 	for item_name: String in entity.inventory.keys():
 		var item: Control = Item.instantiate()
-		item.texture = entity.inventory[item_name][0].texture
-		item.count = entity.inventory[item_name].size()
+		var inventory_item: Array = entity.inventory[item_name]
+		
+		item.resource = inventory_item[0]
+		item.count = inventory_item.size()
 		inventory.add_child(item)
 	
 	show()

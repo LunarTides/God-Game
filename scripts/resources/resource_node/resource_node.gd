@@ -71,7 +71,7 @@ func _deplete() -> void:
 		pass
 	elif data.deplete_method == data.DepleteMethod.DEPLETE_REGENERATE:
 		is_regenerating = true
-		_do_regenerate_cycle()
+		get_tree().create_timer(1, false).timeout.connect(_do_regenerate_cycle)
 
 
 func _do_regenerate_cycle() -> void:
