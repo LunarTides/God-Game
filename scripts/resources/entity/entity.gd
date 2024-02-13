@@ -186,18 +186,16 @@ func set_target(target: Node2D) -> void:
 	set_target_position(target.global_position)
 
 
+## Unsets the target. The AI will resume its normal operations.
+func unset_target() -> void:
+	set_target_position(Vector2.ZERO)
+
+
 ## Begins moving the entity towards the target position.
 func set_target_position(position: Vector2) -> void:
 	walk_to_position.position = position
 	_has_reached_target = false
 	target_switched.emit(position)
-
-
-## Unsets the target. The AI will resume its normal operations.
-func unset_target() -> void:
-	walk_to_position.position = Vector2.ZERO
-	_has_reached_target = false
-	target_switched.emit(Vector2.ZERO)
 
 
 ## Returns if the specified position is the entity's target.
@@ -264,6 +262,11 @@ func pickup_random_nearby_resource() -> bool:
 func walk_to_and_pickup_resource(resource: NodeResource) -> bool:
 	set_target(resource.body)
 	await target_reached
+	
+	if is_controlling:
+		unset_target()
+		return false
+	
 	return pickup_resource(resource)
 
 
@@ -329,6 +332,7 @@ func walk_to_and_use_resource_node(resource_node: ResourceNode) -> bool:
 	
 	# If the player is controlling the entity by the time it reaches the resource node, stop.
 	if is_controlling:
+		unset_target()
 		return false
 	
 	# Use up the resource node

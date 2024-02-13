@@ -73,10 +73,15 @@ func _unhandled_input(event: InputEvent) -> void:
 			entity.use_random_nearby_resource_node()
 		"5":
 			# Switch entity
-			var human1_entity: Entity = Game.get_entity_from_body($Human1 as CharacterBody2D)
-			var human2_entity: Entity = Game.get_entity_from_body($Human2 as CharacterBody2D)
+			var new_entity: Entity
 			
-			entity = human1_entity if entity == human2_entity else human2_entity
+			for i: int in range(20):
+				new_entity = Game.get_entity_from_body(Game.get_random_entity())
+				
+				if new_entity != entity:
+					break
+				
+			entity = new_entity
 		"6":
 			# Turn a random resource to stone
 			var resource_body: StaticBody2D = Game.get_random_resource()
@@ -91,5 +96,4 @@ func _unhandled_input(event: InputEvent) -> void:
 			
 			resource.data = StoneResource
 		"9":
-			# This should keep the entity in-place for a short time
 			entity.set_target(entity.body)
