@@ -1,12 +1,9 @@
-[gd_resource type="Resource" script_class="WorldResource" load_steps=4 format=3 uid="uid://bi0d1g7pkq23u"]
+[gd_resource type="Resource" script_class="WorldResource" load_steps=3 format=3 uid="uid://k4ksd1noib0h"]
 
 [ext_resource type="Script" path="res://scripts/resources/resource/world_resource.gd" id="1_3cgst"]
 [ext_resource type="Texture2D" uid="uid://cumv1v6w1q45c" path="res://assets/resources/stone.png" id="2_842yk"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_xipl5"]
 
 [resource]
 script = ExtResource("1_3cgst")
 name = &"Stone"
 texture = ExtResource("2_842yk")
-collision_shape = SubResource("RectangleShape2D_xipl5")

@@ -5,7 +5,7 @@ extends Control
 	set(new_resource):
 		resource = new_resource
 		
-		if is_instance_valid($Texture):
+		if is_inside_tree():
 			_update()
 		
 @export var count: int

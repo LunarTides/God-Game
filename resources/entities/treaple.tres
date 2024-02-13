@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="WorldEntity" load_steps=4 format=3 uid="uid://umgeou8oi2yn"]
+
+[ext_resource type="PackedScene" uid="uid://ix87ewmdwoiw" path="res://scenes/ai/treaple.tscn" id="1_jqvx4"]
+[ext_resource type="Script" path="res://scripts/resources/entity/world_entity.gd" id="1_oapap"]
+[ext_resource type="Texture2D" uid="uid://c3e4odixn70ab" path="res://assets/entities/treaple.png" id="2_2yby8"]
+
+[resource]
+script = ExtResource("1_oapap")
+name = &"Treaple"
+texture = ExtResource("2_2yby8")
+ai = ExtResource("1_jqvx4")
+health = 200
+speed = 0
+possible_first_names = {
+"Female": ["Lompf", "Fompty", "Jemp"],
+"Male": ["Gnorf", "Slem", "Penam"],
+"Non-binary": ["Lersdasj", "Remanaj", "Po"]
+}
+possible_last_names = Array[String](["Jempt", "Uaem", "Wolej"])
+possible_genders = Array[String](["Male", "Female", "Non-binary"])
+ai_color = Color(1, 1, 1, 1)
+player_color = Color(0.862745, 0.0784314, 0.235294, 1)
+hover_color = Color(0.372549, 0.568627, 1, 1)

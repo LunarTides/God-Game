@@ -88,12 +88,12 @@ signal tree_disabled
 		custom_monitor = b
 		if custom_monitor and _process_time_metric_name != '':
 			Performance.add_custom_monitor(_process_time_metric_name, _get_process_time_metric_value)
-			#_get_global_metrics().register_tree(self)
+			_get_global_metrics().register_tree(self)
 		else:
 			if _process_time_metric_name != '':
 				# Remove tree metric from the engine
 				Performance.remove_custom_monitor(_process_time_metric_name)
-				#_get_global_metrics().unregister_tree(self)
+				_get_global_metrics().unregister_tree(self)
 
 			BeehaveDebuggerMessages.unregister_tree(get_instance_id())
 
@@ -140,13 +140,13 @@ func _ready() -> void:
 	# Register custom metric to the engine
 	if custom_monitor and not Engine.is_editor_hint():
 		Performance.add_custom_monitor(_process_time_metric_name, _get_process_time_metric_value)
-		#_get_global_metrics().register_tree(self)
+		_get_global_metrics().register_tree(self)
 
 	if Engine.is_editor_hint():
 		update_configuration_warnings.call_deferred()
 	else:
-		#_get_global_debugger().register_tree(self)
-		#BeehaveDebuggerMessages.register_tree(_get_debugger_data(self))
+		_get_global_debugger().register_tree(self)
+		BeehaveDebuggerMessages.register_tree(_get_debugger_data(self))
 		pass
 
 	# Randomize at what frames tick() will happen to avoid stutters
@@ -269,7 +269,7 @@ func _exit_tree() -> void:
 		if _process_time_metric_name != '':
 			# Remove tree metric from the engine
 			Performance.remove_custom_monitor(_process_time_metric_name)
-			#_get_global_metrics().unregister_tree(self)
+			_get_global_metrics().unregister_tree(self)
 
 		BeehaveDebuggerMessages.unregister_tree(get_instance_id())
 
@@ -279,17 +279,17 @@ func _get_process_time_metric_value() -> int:
 	return int(_process_time_metric_value)
 
 
-#func _get_debugger_data(node: Node) -> Dictionary:
-	#if not node is BeehaveTree and not node is BeehaveNode:
-		#return {}
-	#var data := { path = node.get_path(), name = node.name, type = node.get_class_name(), id = str(node.get_instance_id()) }
-	#if node.get_child_count() > 0:
-		#data.children = []
-	#for child in node.get_children():
-		#var child_data := _get_debugger_data(child)
-		#if not child_data.is_empty():
-			#data.children.push_back(child_data)
-	#return data
+func _get_debugger_data(node: Node) -> Dictionary:
+	if not node is BeehaveTree and not node is BeehaveNode:
+		return {}
+	var data := { path = node.get_path(), name = node.name, type = node.get_class_name(), id = str(node.get_instance_id()) }
+	if node.get_child_count() > 0:
+		data.children = []
+	for child in node.get_children():
+		var child_data := _get_debugger_data(child)
+		if not child_data.is_empty():
+			data.children.push_back(child_data)
+	return data
 
 
 func get_class_name() -> Array[StringName]:
@@ -298,11 +298,11 @@ func get_class_name() -> Array[StringName]:
 
 # required to avoid lifecycle issues on initial load
 # due to loading order problems with autoloads
-#func _get_global_metrics() -> Node:
-	#return get_tree().root.get_node("BeehaveGlobalMetrics")
-	#
-	#
+func _get_global_metrics() -> Node:
+	return get_tree().root.get_node("BeehaveGlobalMetrics")
+	
+	
 # required to avoid lifecycle issues on initial load
 # due to loading order problems with autoloads
-#func _get_global_debugger() -> Node:
-	#return get_tree().root.get_node("BeehaveGlobalDebugger")
+func _get_global_debugger() -> Node:
+	return get_tree().root.get_node("BeehaveGlobalDebugger")

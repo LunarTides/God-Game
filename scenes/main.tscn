@@ -3,11 +3,13 @@
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_74ilg"]
 [ext_resource type="PackedScene" uid="uid://ctb6jd8v40e14" path="res://scenes/ui/entity_panel.tscn" id="1_xf4ig"]
 
-[node name="Main" type="Node2D" node_paths=PackedStringArray("entity_panel", "human_spawn_1", "human_spawn_2")]
+[node name="Main" type="Node2D" node_paths=PackedStringArray("entity_panel", "human_spawn_1", "human_spawn_2", "wood_spawn", "tree_spawn")]
 script = ExtResource("1_74ilg")
 entity_panel = NodePath("EntityPanel")
 human_spawn_1 = NodePath("HumanSpawn")
 human_spawn_2 = NodePath("Human2Spawn")
+wood_spawn = NodePath("WoodSpawn")
+tree_spawn = NodePath("TreeSpawn")
 
 [node name="EntityPanel" parent="." instance=ExtResource("1_xf4ig")]
 
@@ -16,3 +18,9 @@ position = Vector2(316, 130)
 
 [node name="Human2Spawn" type="Node2D" parent="."]
 position = Vector2(1099, 74)
+
+[node name="WoodSpawn" type="Node2D" parent="."]
+position = Vector2(949, 403)
+
+[node name="TreeSpawn" type="Node2D" parent="."]
+position = Vector2(172, 481)

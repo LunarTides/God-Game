@@ -13,28 +13,12 @@ const ResourceScene: PackedScene = preload("res://scenes/resources/resource.tscn
 ## The resource node's sprite. This should probably be a sibling to the [ResourceNode] node.
 @export var sprite: Sprite2D
 
-## The resource node's collision node.
-@export var collision_node: CollisionShape2D
-
-## The resource node's Area node.
-@export var area: Area2D
-
 ## The resource node's unique data. Set this before
 var data: WorldResourceNode:
 	set(new_data):
 		data = new_data
 		
 		sprite.texture = data.texture
-		collision_node.shape = data.collision_shape
-		
-		if area.has_node("CollisionShape2D"):
-			area.get_node("CollisionShape2D").shape = data.collision_shape
-		else:
-			var area_collision_node: CollisionShape2D = CollisionShape2D.new()
-			area_collision_node.shape = data.collision_shape
-			area_collision_node.name = "CollisionShape2D"
-			
-			area.add_child(area_collision_node)
 
 ## Whether or not the resource node is regenerating. Only works if [member data.deplete_method] is [enum DEPLETE_REGENERATE]
 var is_regenerating: bool = false

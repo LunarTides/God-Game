@@ -6,8 +6,8 @@
 #### 3 - Pickup random nearby resource
 #### 4 - Use random nearby resource node
 #### 5 - Switch entity to control
-#### 6 - Turn random resource to stone
-#### 7 - N/A
-#### 8 - N/A
+#### 6 - Turn random resource to stone / wood
+#### 7 - Turn random resource node to boulder / tree
+#### 8 - Turn random entity to treaple / human
 #### 9 - Keep the entity in place
 #### L - Turn item in open inventory to stone / wood

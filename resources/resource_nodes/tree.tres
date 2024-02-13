@@ -4,13 +4,10 @@
 [ext_resource type="Script" path="res://scripts/resources/resource_node/world_resource_node.gd" id="1_wd3gt"]
 [ext_resource type="Texture2D" uid="uid://371h076qcrjf" path="res://assets/resource_nodes/tree.png" id="3_b1ioa"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_q6whu"]
-
 [resource]
 script = ExtResource("1_wd3gt")
 name = &"Tree"
 texture = ExtResource("3_b1ioa")
-collision_shape = SubResource("RectangleShape2D_q6whu")
 use_times = 5
 resource = ExtResource("1_k82g0")
 deplete_method = 0

@@ -3,10 +3,7 @@
 [ext_resource type="Script" path="res://scripts/resources/resource/world_resource.gd" id="1_vqb2x"]
 [ext_resource type="Texture2D" uid="uid://be4y0u2k08ha7" path="res://assets/resources/wood.png" id="2_kuops"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_xipl5"]
-
 [resource]
 script = ExtResource("1_vqb2x")
 name = &"Wood"
 texture = ExtResource("2_kuops")
-collision_shape = SubResource("RectangleShape2D_xipl5")

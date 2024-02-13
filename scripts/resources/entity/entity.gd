@@ -25,9 +25,6 @@ signal target_switched(position: Vector2)
 ## The entity's sprite. This should probably be a sibling to the [Entity] node.
 @export var sprite: Sprite2D
 
-## The entity's collision node.
-@export var collision_node: CollisionShape2D
-
 ## The entity's Area node. This is currently only used for hover detection, so define the collision shape correctly.
 @export var area: Area2D
 
@@ -45,10 +42,13 @@ signal target_switched(position: Vector2)
 #region public variables
 var data: WorldEntity:
 	set(new_data):
+		if data:
+			# Change max health while keeping damage
+			health = new_data.health - (data.health - health)
+		
 		data = new_data
 		
 		sprite.texture = data.texture
-		collision_node.shape = data.collision_shape
 		if is_instance_valid(ai):
 			remove_child(ai)
 		
@@ -60,14 +60,9 @@ var data: WorldEntity:
 		ai = ai_node.get_child(0) as BeehaveTree
 		ai.name = "AI"
 		ai.actor = body
-		add_sibling(ai)
 		
-		# Area Collision
-		var area_collision_node: CollisionShape2D = CollisionShape2D.new()
-		area_collision_node.shape = data.collision_shape
-		area_collision_node.name = "CollisionShape2D"
-		
-		area.add_child(area_collision_node)
+		if is_inside_tree():
+			ai.reparent(self)
 		
 		generate_gender()
 		generate_name()
@@ -117,15 +112,10 @@ func _ready() -> void:
 	area.mouse_exited.connect(_stop_hover)
 	
 	area.input_event.connect(_on_area_input_event)
-	
-	# This isn't required, but we should still probably do this
-	ai._ready()
+	ai.reparent(self)
 
 
 func _physics_process(delta: float) -> void:
-	# For some reason, when having the ai in its own scene, we need to manually process it here
-	ai._process_internally()
-	
 	if Input.is_action_just_pressed("release_control"):
 		is_controlling = false
 		sprite.modulate = data.ai_color
@@ -141,7 +131,7 @@ func _physics_process(delta: float) -> void:
 	
 	body.velocity = body.velocity.normalized() * 16 * data.speed * delta
 	
-	if walk_to_position.position and not is_controlling:
+	if is_instance_valid(walk_to_position) and walk_to_position.position and not is_controlling:
 		if body.position.distance_to(walk_to_position.position) > target_threshold:
 			body.move_and_slide()
 	else:
@@ -193,6 +183,9 @@ func unset_target() -> void:
 
 ## Begins moving the entity towards the target position.
 func set_target_position(position: Vector2) -> void:
+	if not is_instance_valid(walk_to_position):
+		return
+	
 	walk_to_position.position = position
 	_has_reached_target = false
 	target_switched.emit(position)
@@ -200,17 +193,26 @@ func set_target_position(position: Vector2) -> void:
 
 ## Returns if the specified position is the entity's target.
 func target_is_vector(position: Vector2) -> bool:
+	if not is_instance_valid(walk_to_position):
+		return false
+	
 	return walk_to_position.position == position
 
 
 ## Returns if the specified node is the entity's target.
 func target_is_node(node: Node2D) -> bool:
+	if not is_instance_valid(walk_to_position):
+		return false
+	
 	return walk_to_position.position == node.global_position
 
 
 ## Returns if the entity has a target.
 ## As long as an AI is controlling the entity, this will almost always return true.
 func has_target() -> bool:
+	if not is_instance_valid(walk_to_position):
+		return false
+	
 	return walk_to_position.position != null
 
 
@@ -283,11 +285,11 @@ func walk_to_and_pickup_random_resource() -> bool:
 ## 
 ## [br][br][b]Note:[/b] Returns [code]null[/code] if no valid resource was found.
 func get_random_nearby_resource() -> NodeResource:
-	var body: StaticBody2D = _get_random_nearby_node_in_group("Resources")
-	if body == null:
+	var resource_body: StaticBody2D = _get_random_nearby_node_in_group("Resources")
+	if resource_body == null:
 		return null
 	
-	return Game.get_resource_from_body(body)
+	return Game.get_resource_from_body(resource_body)
 #endregion
 
 
@@ -367,11 +369,11 @@ func walk_to_and_use_random_resource_node() -> bool:
 ## 
 ## [br][br][b]Note:[/b] Returns [code]null[/code] if no valid resource node was found.
 func get_random_nearby_resource_node() -> ResourceNode:
-	var body: StaticBody2D = _get_random_nearby_node_in_group("Resource Nodes")
-	if body == null:
+	var resource_node_body: StaticBody2D = _get_random_nearby_node_in_group("Resource Nodes")
+	if resource_node_body == null:
 		return null
 	
-	return Game.get_resource_node_from_body(body)
+	return Game.get_resource_node_from_body(resource_node_body)
 #endregion
 #endregion
 
@@ -391,9 +393,9 @@ func _reset_modulate() -> void:
 
 func _is_node_in_range(node: Node2D) -> bool:
 	# If the player is controlling the entity, 10x its reach
-	var range: float = reach if not is_controlling else reach * 10
+	var entity_range: float = reach if not is_controlling else reach * 10
 	
-	return body.position.distance_to(node.global_position) <= range
+	return body.position.distance_to(node.global_position) <= entity_range
 
 
 func _get_random_nearby_node_in_group(group: StringName) -> Node2D:

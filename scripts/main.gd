@@ -2,15 +2,21 @@ extends Node2D
 
 
 const HumanResource: WorldEntity = preload("res://resources/entities/human.tres")
+const TreapleResource: WorldEntity = preload("res://resources/entities/treaple.tres")
+
 const WoodResource: WorldResource = preload("res://resources/resources/wood.tres")
 const StoneResource: WorldResource = preload("res://resources/resources/stone.tres")
+
 const TreeResource: WorldResourceNode = preload("res://resources/resource_nodes/tree.tres")
+const BoulderResource: WorldResourceNode = preload("res://resources/resource_nodes/boulder.tres")
 
 @export var entity_panel: Panel
 
 # TODO: Remove at some point
 @export var human_spawn_1: Node2D
 @export var human_spawn_2: Node2D
+@export var wood_spawn: Node2D
+@export var tree_spawn: Node2D
 
 var entity: Entity
 
@@ -35,13 +41,13 @@ func _ready() -> void:
 	
 	# Wood
 	var wood: StaticBody2D = Game.create_resource(WoodResource)
-	wood.position = Vector2(949, 403)
+	wood.position = wood_spawn.position
 	wood.name = "Wood"
 	add_child(wood)
 	
 	# Tree
 	var tree: StaticBody2D = Game.create_resource_node(TreeResource)
-	tree.position = Vector2i(172, 481)
+	tree.position = tree_spawn.position
 	tree.name = "Tree"
 	add_child(tree)
 
@@ -90,9 +96,30 @@ func _unhandled_input(event: InputEvent) -> void:
 				return
 			
 			if resource.data == StoneResource:
-				print_debug("That resource is already a stone!")
+				resource.data = WoodResource
+			else:
+				resource.data = StoneResource
+		"7":
+			# Turn a random resource node to stone
+			var resource_node: ResourceNode = Game.get_random_resource_node()
+			if not resource_node:
+				print_debug("No resource node found!")
 				return
 			
-			resource.data = StoneResource
+			if resource_node.data == TreeResource:
+				resource_node.data = BoulderResource
+			else:
+				resource_node.data = TreeResource
+		"8":
+			# Turn a random entity to treaple
+			var entity: Entity = Game.get_random_entity()
+			if not entity:
+				print_debug("No entity found!")
+				return
+			
+			if entity.data == HumanResource:
+				entity.data = TreapleResource
+			else:
+				entity.data = HumanResource
 		"9":
 			entity.set_target(entity.body)

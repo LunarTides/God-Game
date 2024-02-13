@@ -7,9 +7,6 @@ extends Resource
 ## The texture of the resource node.
 @export var texture: Texture2D
 
-## The collision shape of the resource node.
-@export var collision_shape: Shape2D
-
 ## The amount of times the resource node can be used.
 @export var use_times: int
 

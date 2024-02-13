@@ -1,22 +1,29 @@
-[gd_scene load_steps=3 format=3 uid="uid://2yawdla60fyk"]
+[gd_scene load_steps=4 format=3 uid="uid://2yawdla60fyk"]
 
 [ext_resource type="Script" path="res://scripts/resources/resource/node_resource.gd" id="1_5wxg5"]
 [ext_resource type="Texture2D" uid="uid://be4y0u2k08ha7" path="res://assets/resources/wood.png" id="2_8j2re"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qjahs"]
+size = Vector2(32, 32)
 
 [node name="Resource" type="StaticBody2D" groups=["Resources"]]
 collision_layer = 0
 collision_mask = 0
 
-[node name="Data" type="Node" parent="." node_paths=PackedStringArray("body", "sprite", "collision_node", "area")]
+[node name="Data" type="Node" parent="." node_paths=PackedStringArray("body", "sprite")]
 script = ExtResource("1_5wxg5")
 body = NodePath("..")
 sprite = NodePath("../Sprite")
-collision_node = NodePath("../CollisionShape2D")
-area = NodePath("../Area2D")
 
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_8j2re")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("RectangleShape2D_qjahs")
 
 [node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+visible = false
+shape = SubResource("RectangleShape2D_qjahs")

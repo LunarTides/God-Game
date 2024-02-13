@@ -7,9 +7,6 @@ extends Resource
 ## The entity's texture.
 @export var texture: Texture2D
 
-## The entity's collision shape.
-@export var collision_shape: Shape2D
-
 ## The entity's AI scene.
 @export var ai: PackedScene
 
