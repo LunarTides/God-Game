@@ -76,7 +76,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			var new_entity: Entity
 			
 			for i: int in range(20):
-				new_entity = Game.get_entity_from_body(Game.get_random_entity())
+				new_entity = Game.get_random_entity()
 				
 				if new_entity != entity:
 					break
@@ -84,12 +84,11 @@ func _unhandled_input(event: InputEvent) -> void:
 			entity = new_entity
 		"6":
 			# Turn a random resource to stone
-			var resource_body: StaticBody2D = Game.get_random_resource()
-			if not resource_body:
+			var resource: NodeResource = Game.get_random_resource()
+			if not resource:
 				print_debug("No resource found!")
 				return
 			
-			var resource: NodeResource = Game.get_resource_from_body(resource_body)
 			if resource.data == StoneResource:
 				print_debug("That resource is already a stone!")
 				return

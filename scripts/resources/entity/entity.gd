@@ -247,11 +247,9 @@ func pickup_resource(resource: NodeResource) -> bool:
 ## Picks up a random resource from around the entity. The resource needs to be right next to the entity for this to work.
 ## Returns if the pickup was successful.
 func pickup_random_nearby_resource() -> bool:
-	var resource_body: StaticBody2D = get_random_nearby_resource()
-	if not resource_body:
+	var resource: NodeResource = get_random_nearby_resource()
+	if not resource:
 		return false
-	
-	var resource: NodeResource = Game.get_resource_from_body(resource_body)
 	
 	pickup_resource(resource)
 	return true
@@ -273,11 +271,9 @@ func walk_to_and_pickup_resource(resource: NodeResource) -> bool:
 ## Walks to and picks up a random resource.
 ## Returns if the pickup was successful.
 func walk_to_and_pickup_random_resource() -> bool:
-	var resource_body: StaticBody2D = Game.get_random_resource()
-	if not resource_body:
+	var resource: NodeResource = Game.get_random_resource()
+	if not resource:
 		return false
-	
-	var resource: NodeResource = Game.get_resource_from_body(resource_body)
 	
 	await walk_to_and_pickup_resource(resource)
 	return true
@@ -286,8 +282,12 @@ func walk_to_and_pickup_random_resource() -> bool:
 ## Returns a random resource that is in range of the entity.
 ## 
 ## [br][br][b]Note:[/b] Returns [code]null[/code] if no valid resource was found.
-func get_random_nearby_resource() -> StaticBody2D:
-	return _get_random_nearby_node_in_group("Resources") as StaticBody2D
+func get_random_nearby_resource() -> NodeResource:
+	var body: StaticBody2D = _get_random_nearby_node_in_group("Resources")
+	if body == null:
+		return null
+	
+	return Game.get_resource_from_body(body)
 #endregion
 
 
@@ -306,11 +306,9 @@ func use_resource_node(resource_node: ResourceNode) -> bool:
 ## Uses a random resource node from around the entity. The resource node needs to be right next to the entity for this to work.
 ## Returns if the use was successful.
 func use_random_nearby_resource_node() -> bool:
-	var resource_node_body: StaticBody2D = get_random_nearby_resource_node()
-	if not resource_node_body:
+	var resource_node: ResourceNode = get_random_nearby_resource_node()
+	if not resource_node:
 		return false
-	
-	var resource_node: ResourceNode = Game.get_resource_node_from_body(resource_node_body)
 	
 	use_resource_node(resource_node)
 	return true
@@ -357,11 +355,9 @@ func walk_to_and_use_resource_node(resource_node: ResourceNode) -> bool:
 ## Walks to and uses up a random resource node.
 ## Returns if the use was successful.
 func walk_to_and_use_random_resource_node() -> bool:
-	var resource_node_body: StaticBody2D = Game.get_random_resource_node()
-	if not resource_node_body:
+	var resource_node: ResourceNode = Game.get_random_resource_node()
+	if not resource_node:
 		return false
-	
-	var resource_node: ResourceNode = Game.get_resource_node_from_body(resource_node_body)
 	
 	await walk_to_and_use_resource_node(resource_node)
 	return true
@@ -370,8 +366,12 @@ func walk_to_and_use_random_resource_node() -> bool:
 ## Returns a random resource node that is in range of the entity.
 ## 
 ## [br][br][b]Note:[/b] Returns [code]null[/code] if no valid resource node was found.
-func get_random_nearby_resource_node() -> StaticBody2D:
-	return _get_random_nearby_node_in_group("Resource Nodes") as StaticBody2D
+func get_random_nearby_resource_node() -> ResourceNode:
+	var body: StaticBody2D = _get_random_nearby_node_in_group("Resource Nodes")
+	if body == null:
+		return null
+	
+	return Game.get_resource_node_from_body(body)
 #endregion
 #endregion
 
